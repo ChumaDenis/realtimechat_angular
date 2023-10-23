@@ -1,0 +1,9 @@
+
+    <button class="chat-component button-div" (click)="Open()">
+        <h5>{{chat.name}}</h5>
+        <div class="message-container">
+            <h6>{{chat.lastMessage?.owner?.userName}}: {{chat.lastMessage?.textContent}}</h6>
+            <p class="message-date">{{chat.lastMessage?.sendTime | date:'HH:mm dd/MM/yy'}}</p>
+        </div>
+    </button>
+
