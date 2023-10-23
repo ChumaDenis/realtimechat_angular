@@ -31,10 +31,6 @@ export class ChatService {
     return this.http.get(api,{ headers: this.headers}).pipe(catchError(this.handleError));
   }
 
-  getMessages(name:string ): Observable<any> {
-    let api = `${this.endpoint}/ChatMessage/get?chatName=${name}&PageNumber=1&PageSize=20`;
-    return this.http.get(api,{ headers: this.headers}).pipe(catchError(this.handleError));
-  }
 
   // Error
   handleError(error: HttpErrorResponse) {

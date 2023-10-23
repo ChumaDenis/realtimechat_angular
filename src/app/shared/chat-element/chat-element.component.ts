@@ -13,12 +13,8 @@ export class ChatElementComponent implements OnInit {
   @Input() chat:ChatElement=new ChatElement();
 constructor(private service:ChatService, private router:Router) {
 }
- public Open(){
-    this.router.navigateByUrl(`/chat/${this.chat.name}`);
 
- }
   ngOnInit(): void {
-
   }
 
 }

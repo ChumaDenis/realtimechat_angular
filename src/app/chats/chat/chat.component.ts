@@ -3,6 +3,7 @@ import {Chat} from "../chatDtos/Chat";
 import {ChatService} from "../chat.service";
 import {ActivatedRoute} from "@angular/router";
 import {Message} from "../../shared/Dtos/Message";
+import {MessageService} from "./message.service";
 
 @Component({
   selector: 'app-chat',
@@ -12,13 +13,17 @@ import {Message} from "../../shared/Dtos/Message";
 export class ChatComponent {
   public Messages?:Message[];
   public ChatInfo?:Chat;
-  constructor(private service:ChatService, private route: ActivatedRoute) {
-    this.route.params.subscribe(p=>{
-      this.service.getChat(p.name).subscribe(x=>{
-        this.ChatInfo=x;
-        console.log(x);
+  constructor(
+      private chatService:ChatService,
+      private messageService:MessageService,
+      private route: ActivatedRoute) {
 
-        this.service.getMessages(this.ChatInfo?.name||"").subscribe(r=>{
+    this.route.params.subscribe(p=>{
+      this.chatService.getChat(p.name).subscribe(x=>{
+        this.ChatInfo=x;
+        console.log(this.ChatInfo);
+
+        this.messageService.getMessages(this.ChatInfo?.name||"").subscribe(r=>{
           this.Messages=r.items;
           console.log(this.Messages);
         })

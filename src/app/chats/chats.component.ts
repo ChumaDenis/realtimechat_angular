@@ -10,8 +10,7 @@ import {PagedList} from "../shared/Dtos/PagedList";
   styleUrls: ['./chats.component.scss']
 })
 export class ChatsComponent {
-    public chats:ChatElement[]=[
-        ];
+    public chats:ChatElement[]=[];
   constructor(private service:ChatService) {
     this.service.getChats().subscribe(x=>{
           if(x!=undefined)
@@ -24,8 +23,4 @@ export class ChatsComponent {
     );
 
   }
-
-
-
-
 }

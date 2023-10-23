@@ -3,6 +3,7 @@ import {ChatElement} from "../../chatDtos/ChatElement";
 import {ChatService} from "../../chat.service";
 import {Router} from "@angular/router";
 import {Message} from "../../../shared/Dtos/Message";
+import {MessageService} from "../message.service";
 
 @Component({
   selector: 'app-message',
@@ -11,9 +12,12 @@ import {Message} from "../../../shared/Dtos/Message";
 })
 export class MessageComponent {
   @Input() messsage:Message=new Message();
-  constructor(private service:ChatService, private router:Router) {
+
+  constructor(private service:MessageService, private router:Router) {
   }
 
-
+  deleteMessage(){
+    this.service.deleteMessage(this.messsage.id||"").subscribe(x=>console.log(x));
+  }
 
 }
