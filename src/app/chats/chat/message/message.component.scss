@@ -1,33 +1,47 @@
-.chat-component{
+.message-component{
+  position: relative;
+  max-width: 30vw;
+  min-width: 250px;
+  width: fit-content;
   border-radius: 10px;
   background-color:#f9f9f9;
   padding: 10px 30px;
   margin: 30px;
-  //box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
+}
+.button-div{
+  top:-5px;
+  left: 15px;
+  cursor: pointer;
+  outline: inherit;
+  border:none;
+  padding: unset;
+  margin: 0 4px;
+  >*{
+    text-align: left;
+  }
+}
+.message{
+  position: relative;
   *{
     text-decoration: none;
     color: black;
   }
-  .message-date{
-    text-align: right;
-  }
+
   .message-container{
-    height: 20px;
     display: flex;
     justify-content: space-between;
+    max-width: 28vw;
+    *{
+      word-wrap: break-word;
+    }
   }
-
 }
-.button-div{
-  
-  color: inherit;
-  border: none;
-  font: inherit;
-  cursor: pointer;
-  outline: inherit;
-  border:none;
-  >*{
-    text-align: left;
-  }
+.message-date{
+  font-size: 12px;
+  text-align: right;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin: unset;
 }

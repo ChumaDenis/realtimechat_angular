@@ -1,9 +1,9 @@
 <header class="header">
-    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
             <div class="collapse navbar-collapse" id="jumbotronExample">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item active">
+                    <li class="logo nav-item active">
                         <a class="navbar-brand" aria-current="page" href="#">RealTimeChat</a>
                     </li>
                     <li class="nav-item">
@@ -14,7 +14,6 @@
                     </li>
                 </ul>
             </div>
-
                 <a class="nav-link" style="margin-right: 20px;" href="#">{{userName}}</a>
 
             <a
@@ -30,11 +29,10 @@
                     (click)="logout()"
                     *ngIf="this.authService.isLoggedIn"
                     type="button"
-                    class="btn btn-danger"
+                    class="btn "
             >
                 Logout
             </button>
         </div>
     </nav>
-
 </header>

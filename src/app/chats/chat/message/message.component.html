@@ -1,13 +1,24 @@
-<div class="chat-component">
-    <div class="message-container">
-        <h6>{{this.messsage.owner?.userName}}</h6>
-        <button class="button-div" (click)="deleteMessage()" >delete</button>
-    </div>
+<div class="message-component" [style]="getMessageStyles()" (contextmenu)="onRightClick($event)">
+    <div class="message" (pointerover)="this.isActive=true;" (pointerleave)="this.isActive=false;">
+        <div class="message-container" >
+            <h6>{{this.messsage.owner?.userName}}</h6>
+            <div *ngIf="this.isActive">
+                <button *ngIf="isYourMessage" class="btn button-div" (click)="updateMessage()" >edite</button>
+                <button *ngIf="isYourMessage || isYourChat" class="btn button-div" (click)="deleteMessage()" >delete</button>
+            </div>
+        </div>
+        <div *ngIf="this.currentContent">
+            <app-content-view [content]="filterContent()" [currentContent]="this.currentContent" (CloseViewEvent)="this.currentContent=undefined;">
 
-    <div class="message-container">
-        <p>{{this.messsage.textContent}} </p>
+            </app-content-view>
+        </div>
+        <div *ngIf="this.hasFiles">
+            <app-content-element *ngFor="let content of this.messsage?.contentFiles" (ContentOpenEvent)="this.currentContent=content" [content]="content"></app-content-element>
+        </div>
+        <div class="message-container">
+            <p>{{this.messsage.textContent}} </p>
+        </div>
         <p class="message-date">{{this.messsage.sendTime | date:'HH:mm dd/MM/yy'}}</p>
     </div>
-
 </div>
 

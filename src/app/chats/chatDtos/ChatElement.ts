@@ -5,4 +5,5 @@ export class ChatElement {
 
     name?: string;
     lastMessage?:Message;
+    createdDate?:Date;
 }

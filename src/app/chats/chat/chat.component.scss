@@ -1,0 +1,48 @@
+.message-form{
+  display: flex;
+  justify-content: center;
+}
+.input-file-container{
+  display: flex;
+  position: absolute;
+  padding: 0 1.5vw;
+  bottom:5vh;
+  >*{
+    margin: 0 1vw;
+  }
+}
+.input-container{
+  position: relative;
+  margin: unset;
+}
+.chat-container{
+  height: 94vh;
+  .chat-input{
+    margin-top: 3px;
+    height: 40px;
+    width: 90%;
+    border-radius: 20px;
+    padding: 0 20px;
+  }
+}
+.DivWithScroll{
+  height: 88vh;
+  overflow:scroll;
+  overflow-x:hidden;
+  position: relative;
+}
+.input-file{
+  position: relative;
+  width:40px;
+  height:40px;
+  font-size: 25px;
+  >*{
+    text-align: center;
+  }
+}
+.send-button{
+  text-align: center;
+  width:40px;
+  height:40px;
+  font-size: 25px;
+}

@@ -23,7 +23,7 @@ export class ChatService {
 
   // Sign-up
   getChats(): Observable<any> {
-    let api = `${this.endpoint}/Chat/chats?PageNumber=${1}&PageSize=${5}`;
+    let api = `${this.endpoint}/Chat/chats`;
     return this.http.get(api,{ headers: this.headers}).pipe(catchError(this.handleError));
   }
   getChat(name:string ): Observable<any> {

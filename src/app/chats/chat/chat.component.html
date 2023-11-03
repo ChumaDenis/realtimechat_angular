@@ -1,1 +1,23 @@
-<app-message *ngFor="let m of this.Messages" [messsage]="m"></app-message>
+<div class="chat-container">
+    <div class="DivWithScroll" #scroll>
+        <app-message *ngFor="let m of this.Messages;" [messsage]="m" (MessageChangeEvent)="onMessageChange($event)">
+            {{this.IsScrolled ? ScrollToBottom() : ''}}
+        </app-message>
+    </div>
+    <div class="input-container">
+        <div class="input-file-container">
+            <app-selected-files *ngFor="let file of this.fileList" [file]="file.name" (DeleteFileEvent)="DeleteFile($event)"></app-selected-files>
+        </div>
+        <form class="message-form" [formGroup]="sendMessageForm" >
+            <input class="chat-input" id="textContent" type="text" formControlName="TextContent">
+            <div>
+                <button class="btn input-file"  onclick="document.getElementById('getFile').click()">
+                    <mat-icon>attach_file</mat-icon>
+                </button>
+                <input type='file' multiple id="getFile" (change)="detectFiles($event)" style="display:none">
+            </div>
+            <button class="btn send-button" type="submit" (click)="sendMessage()"><mat-icon>send</mat-icon></button>
+        </form>
+    </div>
+
+</div>

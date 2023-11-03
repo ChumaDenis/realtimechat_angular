@@ -1,9 +1,20 @@
 .chats-body{
-    display: grid;
-    margin-top: 50px;
-    >*{
-        margin-bottom: 30px;
+    background-color: #dbdbdb;
+    height: 100%;
+    width: 20vw;
+    padding: 0 5%;
+    display: inline-block;
+    .chat-input{
+        height: 40px;
+        background-color: #e3e3e3;
+        width: 100%;
+        border-radius: 20px;
+        padding: 0 20px;
+
     }
+    >*{
+        margin: 20px 0;
 
-
+    }
 }
+
