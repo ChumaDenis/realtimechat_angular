@@ -164,7 +164,7 @@ export class ChatComponent implements OnInit, OnDestroy{
           });
       }
   }
-  private clearForm(){
+  protected clearForm(){
       this.UpdateMessage=undefined;
       this.isUpdateMessage=false;
       this.isReplyMessage=false;
@@ -174,4 +174,8 @@ export class ChatComponent implements OnInit, OnDestroy{
   }
   protected readonly onscroll = onscroll;
 
+  protected CloseReply(){
+      this.isReplyMessage=false;
+      this.replyMessage=undefined;
+  }
 }

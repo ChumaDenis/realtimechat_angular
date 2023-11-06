@@ -1,32 +1,18 @@
-.message-form{
-  display: flex;
-  justify-content: center;
-}
-.input-file-container{
-  display: flex;
-  position: absolute;
-  padding: 0 1.5vw;
-  bottom:5vh;
-  >*{
-    margin: 0 1vw;
-  }
-}
-.input-container{
-  position: relative;
-  margin: unset;
-}
 .chat-container{
-  height: 94vh;
+  height: 93.5vh;
+  position: relative;
+  box-sizing: inherit;
+  display: grid;
   .chat-input{
     margin-top: 3px;
     height: 40px;
     width: 90%;
     border-radius: 20px;
     padding: 0 20px;
+    max-height: 10vh;
   }
 }
 .DivWithScroll{
-  height: 88vh;
   overflow:scroll;
   overflow-x:hidden;
   position: relative;
@@ -48,6 +34,50 @@
 }
 
 
-.message-reply-input{
-  background-color: #dbdbdb;
+.message-reply-container{
+  border-top: solid #dbdbdb 3px;
+  border-radius: 10px;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+
+  .message-reply{
+    position: relative;
+    display: flex;
+    >*{
+      margin: 0 10px;
+    }
+  }
+  mat-icon{
+    margin: auto;
+    text-align: center;
+    width: auto;
+    height: auto;
+    font-size: 30px;
+  }
+  p{
+    font-size: 15px;
+  }
+}
+.message-form{
+  display: flex;
+  justify-content: center;
+}
+.input-file-container{
+  display: flex;
+  padding: 0 1.5vw;
+  >*{
+    margin: 0 1vw;
+  }
+}
+.input-container{
+  position: relative;
+  margin: unset;
+}
+
+.text.single-line {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 60vw;
 }
