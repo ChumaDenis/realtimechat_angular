@@ -1,11 +1,14 @@
-<div class="message-component" [style]="getMessageStyles()" (contextmenu)="onRightClick($event)">
+<div class="message-component" [style]="getMessageStyles()" (contextmenu)="displayContextMenu($event); false" >
     <div class="message" (pointerover)="this.isActive=true;" (pointerleave)="this.isActive=false;">
         <div class="message-container" >
-            <h6>{{this.messsage.owner?.userName}}</h6>
+            <h6>{{this.message.owner?.userName}}</h6>
             <div *ngIf="this.isActive">
-                <button *ngIf="isYourMessage" class="btn button-div" (click)="updateMessage()" >edite</button>
-                <button *ngIf="isYourMessage || isYourChat" class="btn button-div" (click)="deleteMessage()" >delete</button>
+                <button  class="btn button-div" (click)="ReplyMessage()" >reply</button>
             </div>
+        </div>
+        <div *ngIf="this.message.messageReply" class="message-reply">
+          <h6>{{this.message.messageReply.owner?.userName}}</h6>
+          <p class="text single-line">{{this.message.messageReply.textContent}}</p>
         </div>
         <div *ngIf="this.currentContent">
             <app-content-view [content]="filterContent()" [currentContent]="this.currentContent" (CloseViewEvent)="this.currentContent=undefined;">
@@ -13,12 +16,19 @@
             </app-content-view>
         </div>
         <div *ngIf="this.hasFiles">
-            <app-content-element *ngFor="let content of this.messsage?.contentFiles" (ContentOpenEvent)="this.currentContent=content" [content]="content"></app-content-element>
+            <app-content-element *ngFor="let content of this.message?.contentFiles" (ContentOpenEvent)="this.currentContent=content" [content]="content"></app-content-element>
         </div>
         <div class="message-container">
-            <p>{{this.messsage.textContent}} </p>
+            <span>{{this.message.textContent}} </span>
         </div>
-        <p class="message-date">{{this.messsage.sendTime | date:'HH:mm dd/MM/yy'}}</p>
+        <p class="message-date">{{this.message.sendTime | date:'HH:mm dd/MM/yy'}}</p>
     </div>
+
+    <app-context-menu
+      *ngIf="rightClickMenuItems.length > 0 && isDisplayContextMenu"
+      [ngStyle]="getRightClickMenuStyle()"
+      [contextMenuItems]="rightClickMenuItems"
+      (onContextMenuItemClick)="handleMenuItemClick($event)"
+    ></app-context-menu>
 </div>
 

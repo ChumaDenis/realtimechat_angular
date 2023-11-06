@@ -1,11 +1,9 @@
-<div class="chat-component" (click)="click()">
-    <a href="" [routerLink]="'/chat/'+this.chat.name">
-        <h5 class="chatName">{{chat.name}}</h5>
-        <p class="message-date">{{chat.lastMessage?.sendTime | date:'HH:mm dd/MM/yy'}}</p>
-        <div style=" display: flex ">
-            <h6 class="userName">{{chat.lastMessage?.owner?.userName}}: </h6>
-            <p>{{chat.lastMessage?.textContent}}</p>
-        </div>
-    </a>
+<div class="chat-component" (click)="click()" >
+    <h5 class="chatName">{{chat.name}}</h5>
+    <p class="message-date">{{chat.lastMessage?.sendTime | date:'HH:mm dd/MM/yy'}}</p>
+    <div style=" display: flex ">
+        <h6 class="userName">{{chat.lastMessage?.owner?.userName}}: </h6>
+        <p class="text single-line">{{chat.lastMessage?.textContent}}</p>
+    </div>
 </div>
 

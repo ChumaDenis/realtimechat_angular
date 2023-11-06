@@ -26,14 +26,15 @@ import { SelectedFilesComponent } from './chats/chat/selected-files/selected-fil
 import {MatIconModule} from '@angular/material/icon';
 import { ContentElementComponent } from './chats/chat/message/content-element/content-element.component';
 import { ContentViewComponent } from './chats/chat/message/content-view/content-view.component';
+import { MasterChatComponent } from './layout/master-chat/master-chat.component';
+import { ContextMenuComponent } from './shared/context-menu/context-menu.component';
 const routes: Routes = [
   { path: '', redirectTo: '/log-in', pathMatch: 'full' },
   { path: 'log-in', component: SigninComponent },
   { path: 'sign-up', component: SignupComponent },
   { path: 'user-profile', component: UserProfileComponent, canActivate: [AuthGuard] },
-  { path: 'chat/:name', component: ChatComponent, canActivate: [AuthGuard] },
-  { path: 'chats', component: ChatsComponent, canActivate: [AuthGuard] },
-  { path: 'video/:url', component: VideoComponent, canActivate: [AuthGuard] }
+  { path: 'chats', component:MasterChatComponent, canActivate: [AuthGuard],children: [
+          { path: ':name', component: ChatComponent, canActivate: [AuthGuard] }]}
 ];
 
 @NgModule({
@@ -52,7 +53,9 @@ const routes: Routes = [
     BodyComponent,
     SelectedFilesComponent,
     ContentElementComponent,
-    ContentViewComponent
+    ContentViewComponent,
+    MasterChatComponent,
+    ContextMenuComponent
   ],
     imports: [
         BrowserModule,

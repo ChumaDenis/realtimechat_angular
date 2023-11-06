@@ -23,6 +23,7 @@
 }
 .message{
   position: relative;
+  padding-bottom: 15px;
   *{
     text-decoration: none;
     color: black;
@@ -31,9 +32,12 @@
   .message-container{
     display: flex;
     justify-content: space-between;
-    max-width: 28vw;
+    max-width: 40vw;
+
     *{
-      word-wrap: break-word;
+      width: 100%;
+      word-wrap:break-word;
+      display:inline-block;
     }
   }
 }
@@ -44,4 +48,21 @@
   right: 0;
   bottom: 0;
   margin: unset;
+}
+
+.text.single-line {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.message-reply{
+  padding: 0 1vw;
+  border-left: solid #dbdbdb 3px;
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  *{
+    padding: 0;
+    margin: unset;
+  }
+
 }

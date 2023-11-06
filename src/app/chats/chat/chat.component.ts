@@ -7,10 +7,6 @@ import {ActivatedRoute} from "@angular/router";
 import {FormGroup, FormBuilder} from "@angular/forms";
 import {first, Subject, takeUntil} from "rxjs";
 import {SignalRService} from "../signal-r.service";
-
-
-
-
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
@@ -24,12 +20,13 @@ export class ChatComponent implements OnInit, OnDestroy{
   protected IsScrolled=true;
   protected Messages?:Message[];
 
-
+  protected isReplyMessage:boolean=false;
   protected isUpdateMessage:boolean=false;
   protected UpdateMessage?:Message;
   protected fileList:File[]=[];
   private ChatInfo?:Chat;
   private subject=new Subject<void>()
+  public replyMessage?: Message;
 
   constructor(
       public fb: FormBuilder,
@@ -38,7 +35,7 @@ export class ChatComponent implements OnInit, OnDestroy{
       private route: ActivatedRoute,
       private signalR:SignalRService) {
 
-    this.route.params.pipe(first()).subscribe(p=>{
+    this.route.params.pipe(takeUntil(this.subject)).subscribe(p=>{
       this.chatService.getChat(p.name).pipe(first()).subscribe(data=>{
         this.ChatInfo=data;
         localStorage.setItem("currentChat",data?.name||"");
@@ -47,7 +44,7 @@ export class ChatComponent implements OnInit, OnDestroy{
         this.messageService.getMessages(data?.name||"").pipe(first()).subscribe(messages=>{
           this.Messages=messages.items;
           this.SetSignalR();
-          this.ScrollToBottom();
+          this.IsScrolled=false;
         })
       })
     })
@@ -61,7 +58,6 @@ export class ChatComponent implements OnInit, OnDestroy{
   ngOnDestroy(): void {
       this.subject.next();
       this.subject.complete();
-      console.log("destroy")
       localStorage.removeItem("currentChat");
       localStorage.removeItem("currentChatOwner");
   }
@@ -108,6 +104,10 @@ export class ChatComponent implements OnInit, OnDestroy{
               })
       });
   }
+  protected onMessageReply(message:Message){
+    this.isReplyMessage=true;
+    this.replyMessage=message;
+  }
 
   detectFiles(event:Event) {
       let files = (event.target as HTMLInputElement).files;
@@ -144,6 +144,11 @@ export class ChatComponent implements OnInit, OnDestroy{
               formData.append("Files", this.fileList[i]);
           }
       }
+
+      if(this.isReplyMessage){
+        formData.append("ReplyMessageId", this.replyMessage?.id);
+      }
+
       if(this.isUpdateMessage)
       {
           formData.append('Id', this.UpdateMessage?.id);
@@ -162,8 +167,11 @@ export class ChatComponent implements OnInit, OnDestroy{
   private clearForm(){
       this.UpdateMessage=undefined;
       this.isUpdateMessage=false;
+      this.isReplyMessage=false;
+      this.replyMessage=undefined;
       this.sendMessageForm.patchValue({TextContent:""});
       this.fileList=[];
   }
   protected readonly onscroll = onscroll;
+
 }

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ChatElement} from "../../chats/chatDtos/ChatElement";
 import {ChatService} from "../../chats/chat.service";
 import {DatePipe} from "@angular/common";
@@ -12,10 +12,12 @@ import {SignalRService} from "../../chats/signal-r.service";
 })
 export class ChatElementComponent implements OnInit {
   @Input() chat:ChatElement=new ChatElement();
+  @Output() name=new EventEmitter<string>();
   constructor(private service:ChatService, private router:Router) {
   }
   click(){
-    this.router.navigate([`/chat/${this.chat.name}`]);
+    let i=this.router.url+`/${this.chat.name}`;
+    this.router.navigate([`chats/${this.chat.name}`]);
   }
   ngOnInit(): void {
   }

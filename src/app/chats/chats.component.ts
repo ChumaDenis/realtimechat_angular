@@ -29,11 +29,20 @@ export class ChatsComponent implements OnInit, OnDestroy{
     private FormatLastMessage(chats:ChatElement[]){
       chats.map(x =>{
           if(x.lastMessage){
-              if( (x.lastMessage.textContent?.length||0)>30){
-                  x.lastMessage.textContent=x.lastMessage.textContent?.substring(0,30)+"...";
-              }
-              else if(x.lastMessage?.textContent==undefined){
-                  x.lastMessage.textContent="file";
+
+              if(x.lastMessage?.textContent==""&&x.lastMessage.contentFiles){
+                  // @ts-ignore
+                  if(x.lastMessage.contentFiles.length>1)
+                    x.lastMessage.textContent="files";
+                  else if(x.lastMessage.contentFiles[0].eContentType==1){
+                    x.lastMessage.textContent="image";
+                  }
+                  else if(x.lastMessage.contentFiles[0].eContentType==2){
+                      x.lastMessage.textContent="video";
+                  }
+                  else{
+                      x.lastMessage.textContent="file";
+                  }
               }
           }
           else{

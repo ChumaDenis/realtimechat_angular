@@ -1,10 +1,25 @@
 <div class="chat-container">
     <div class="DivWithScroll" #scroll>
-        <app-message *ngFor="let m of this.Messages;" [messsage]="m" (MessageChangeEvent)="onMessageChange($event)">
+        <app-message *ngFor="let m of this.Messages;" [message]="m" (MessageReplyEvent)="onMessageReply($event)" (MessageChangeEvent)="onMessageChange($event)">
             {{this.IsScrolled ? ScrollToBottom() : ''}}
         </app-message>
     </div>
     <div class="input-container">
+        <div class="message-reply-input" *ngIf="isUpdateMessage">
+            <div>
+                <h6>Edite Message</h6>
+                <p><strong>{{this.UpdateMessage?.owner?.userName}}</strong> {{this.UpdateMessage?.textContent}}</p>
+            </div>
+            <div>
+                <button class="btn">
+                    <mat-icon>clear</mat-icon>
+                </button>
+            </div>
+        </div>
+        <div class="message-reply-input" *ngIf="isReplyMessage">
+            <h6>Reply Message</h6>
+            <p><strong>{{this.replyMessage?.owner?.userName}}</strong> {{this.replyMessage?.textContent}}</p>
+        </div>
         <div class="input-file-container">
             <app-selected-files *ngFor="let file of this.fileList" [file]="file.name" (DeleteFileEvent)="DeleteFile($event)"></app-selected-files>
         </div>
@@ -19,5 +34,4 @@
             <button class="btn send-button" type="submit" (click)="sendMessage()"><mat-icon>send</mat-icon></button>
         </form>
     </div>
-
 </div>
