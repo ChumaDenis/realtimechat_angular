@@ -2,7 +2,9 @@
   height: 93.5vh;
   position: relative;
   box-sizing: inherit;
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   .chat-input{
     margin-top: 3px;
     height: 40px;
@@ -13,9 +15,12 @@
   }
 }
 .DivWithScroll{
+  height: 100%;
   overflow:scroll;
   overflow-x:hidden;
   position: relative;
+  display: flex;
+  flex-direction: column-reverse;
 }
 .input-file{
   position: relative;

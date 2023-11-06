@@ -68,6 +68,7 @@ export class SignalRService {
     const authToken = this.authService.getToken();
     return new HubConnectionBuilder()
         .withUrl(this.connectionUrl,{ accessTokenFactory: () => authToken||"" })
+        .withAutomaticReconnect()
         .build();
   }
 

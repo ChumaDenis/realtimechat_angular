@@ -54,6 +54,7 @@ export class ChatComponent implements OnInit, OnDestroy{
       this.sendMessageForm = this.fb.group({
           TextContent: ['']
       })
+
   }
   ngOnDestroy(): void {
       this.subject.next();
@@ -66,7 +67,7 @@ export class ChatComponent implements OnInit, OnDestroy{
 
       this.signalR.createMessageListener(this.ChatInfo?.name||"")
           .pipe(takeUntil(this.subject)).subscribe(data=>{
-              this.Messages?.push(data);
+              this.Messages?.unshift(data);
           });
 
       this.signalR.updateMessageListener(this.ChatInfo?.name||"")
