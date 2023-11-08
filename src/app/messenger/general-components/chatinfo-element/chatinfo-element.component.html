@@ -1,0 +1,15 @@
+<header class="header">
+    <div class="chatinfo-container" (click)="OpenChatInfo()">
+        <h5>
+            {{this.ChatInfo?.name}}
+        </h5>
+        <p>
+            {{this.ChatInfo?.userViewModels?.length}} members
+        </p>
+    </div>
+    <button class="btn">
+        <mat-icon>more_vert</mat-icon>
+    </button>
+
+</header>
+<app-chatinfo *ngIf="ChatInfoIsOpen" [chatInfo]="ChatInfo" (CloseChatInfo)="this.ChatInfoIsOpen=false"></app-chatinfo>

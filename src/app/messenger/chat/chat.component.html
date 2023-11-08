@@ -1,4 +1,5 @@
 <div class="chat-container">
+    <app-chatinfo-element [ChatInfo]="this.ChatInfo"></app-chatinfo-element>
     <div class="DivWithScroll" #scroll>
         <app-message *ngFor="let m of this.Messages;" [message]="m" (MessageReplyEvent)="onMessageReply($event)" (MessageChangeEvent)="onMessageChange($event)">
             {{this.IsScrolled ? ScrollToBottom() : ''}}

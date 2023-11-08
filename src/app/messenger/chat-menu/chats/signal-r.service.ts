@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import {HubConnection, HubConnectionBuilder} from "@microsoft/signalr";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
-import {Observable, Subject, throwError} from "rxjs";
-import {Message} from "../shared/Dtos/Message";
-import {Chat} from "./chatDtos/Chat";
-import {ChatElement} from "./chatDtos/ChatElement";
-import {AuthService} from "../shared/auth.service";
+import {BehaviorSubject, Observable, Subject, throwError} from "rxjs";
+import {Message} from "../../../shared/Dtos/Message";
+import {Chat} from "../../chat/DTOs/Chat";
+import {ChatElement} from "../../chat/DTOs/ChatElement";
+import {AuthService} from "../../../shared/auth.service";
+import {User} from "../../../components/Models/user";
+import {UserStatus} from "../../../shared/Dtos/UserStatus";
 
 
 
@@ -26,7 +28,20 @@ export class SignalRService {
     return subject;
   }
   private connectToGroup(){
+    this.hubConnection?.on(`UsersStatus`, (data) => {
+      console.log(data)
+    })
     this.hubConnection?.invoke('ConnectToGroup').then(x=>console.log(`connect to groups`));
+  }
+  public getUserStatus(userNames:string[]){
+      this.hubConnection?.invoke<any>("GetUsersStatus", userNames).then()
+      const subject=new Subject<UserStatus[]>();
+      this.hubConnection?.on("GetUsers",x=>{
+          console.log(x)
+        subject.next(x)
+
+      })
+      return subject;
   }
 
   public createMessageListener(chatName:string){

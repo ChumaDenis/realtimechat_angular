@@ -1,14 +1,14 @@
 import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
-import {ChatElement} from "../../chatDtos/ChatElement";
-import {ChatService} from "../../chat.service";
+import {ChatElement} from "../../chat/DTOs/ChatElement";
+import {ChatService} from "../../chat-menu/chats/chat.service";
 import {Router} from "@angular/router";
 import {Message} from "../../../shared/Dtos/Message";
-import {MessageService} from "../message.service";
+import {MessageService} from "../../chat/message.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {Content} from "../../../shared/Dtos/Content";
 import {Video} from "../../../shared/Dtos/Video";
 import {first} from "rxjs";
-import {ContextMenuModel} from "../../../shared/context-menu/context-menu.component";
+import {ContextMenuModel} from "../context-menu/context-menu.component";
 
 @Component({
   selector: 'app-message',

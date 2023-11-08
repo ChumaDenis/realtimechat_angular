@@ -1,0 +1,21 @@
+.header{
+  height: fit-content;
+  background-color: #dbdbdb;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px;
+  padding: 0 25px;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  mat-icon{
+    font-size: 25px;
+  }
+}
+.chatinfo-container{
+  width: fit-content;
+  *{
+    margin: 0;
+  }
+  p{
+    margin-left: 10px;
+  }
+}

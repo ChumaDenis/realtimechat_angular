@@ -1,0 +1,29 @@
+<div class="chatinfo-container">
+    <div class="chatinfo">
+        <div class="chatinfo-header">
+            <h3>Chat Info</h3>
+            <div style="display: flex">
+                <button class="btn" (click)="CloseChatInfo.emit()">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+                <button class="btn" (click)="CloseChatInfo.emit()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <h5>{{chatInfo?.name}}</h5>
+        <hr>
+        <h6>Users:</h6>
+        <div class="chatinfo-users" *ngIf="this.chatInfo">
+            <div class="chatinfo-user" *ngFor="let user of this.chatInfo?.userViewModels">
+              <p>
+                {{user.userName}}
+              </p>
+              <p>
+                {{user.status}}
+              </p>
+            </div>
+        </div>
+    </div>
+</div>

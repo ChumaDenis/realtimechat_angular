@@ -1,10 +1,10 @@
-import {User} from "../../components/Models/user";
+import {User} from "../../../components/Models/user";
 
 export class Chat {
 
     name?: string;
     chatOwner?:User;
-    chatUsers?:User[];
+    userViewModels?:User[];
     createDate?:Date;
 
 }

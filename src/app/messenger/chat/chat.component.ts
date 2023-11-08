@@ -1,12 +1,12 @@
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Message} from "../../shared/Dtos/Message";
-import {Chat} from "../chatDtos/Chat";
-import {ChatService} from "../chat.service";
+import {Chat} from "./DTOs/Chat";
+import {ChatService} from "../chat-menu/chats/chat.service";
 import {MessageService} from "./message.service";
 import {ActivatedRoute} from "@angular/router";
 import {FormGroup, FormBuilder} from "@angular/forms";
 import {first, Subject, takeUntil} from "rxjs";
-import {SignalRService} from "../signal-r.service";
+import {SignalRService} from "../chat-menu/chats/signal-r.service";
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
@@ -24,7 +24,7 @@ export class ChatComponent implements OnInit, OnDestroy{
   protected isUpdateMessage:boolean=false;
   protected UpdateMessage?:Message;
   protected fileList:File[]=[];
-  private ChatInfo?:Chat;
+  protected ChatInfo?:Chat;
   private subject=new Subject<void>()
   public replyMessage?: Message;
 

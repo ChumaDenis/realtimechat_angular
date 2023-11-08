@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ChatService} from "./chat.service";
-import {ChatElement} from "./chatDtos/ChatElement";
+import {ChatElement} from "../../chat/DTOs/ChatElement";
 import {SignalRService} from "./signal-r.service";
 import {first, Subject, takeUntil} from "rxjs";
-import {Message} from "../shared/Dtos/Message";
+import {Message} from "../../../shared/Dtos/Message";
 import {UntilDestroy, untilDestroyed} from "@ngneat/until-destroy";
 
 

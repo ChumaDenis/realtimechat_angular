@@ -3,7 +3,7 @@ import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
 import { HeaderComponent } from './layout/header/header.component';
-import { ChatsComponent } from './chats/chats.component';
+import { ChatsComponent } from './messenger/chat-menu/chats/chats.component';
 import { ChannelComponent } from './channel/channel.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import { SigninComponent } from './components/signin/signin.component';
@@ -12,22 +12,24 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import {AuthInterceptor} from "./shared/authconfig.interceptor";
 import {AuthGuard} from "./shared/auth.guard";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import { ChatElementComponent } from './shared/chat-element/chat-element.component';
-import { ChatComponent } from './chats/chat/chat.component';
-import { MessageComponent } from './chats/chat/message/message.component';
+import { ChatElementComponent } from './messenger/chat-menu/chat-element/chat-element.component';
+import { ChatComponent } from './messenger/chat/chat.component';
+import { MessageComponent } from './messenger/general-components/message/message.component';
 import {VgCoreModule} from "@videogular/ngx-videogular/core";
 import {VgControlsModule} from "@videogular/ngx-videogular/controls";
 import {VgOverlayPlayModule} from "@videogular/ngx-videogular/overlay-play";
 import {VgBufferingModule} from "@videogular/ngx-videogular/buffering";
-import { VideoComponent } from './chats/chat/message/content-view/video/video.component';
+import { VideoComponent } from './messenger/general-components/video/video.component';
 import { BodyComponent } from './layout/body/body.component';
-import { SelectedFilesComponent } from './chats/chat/selected-files/selected-files.component';
+import { SelectedFilesComponent } from './messenger/general-components/selected-files/selected-files.component';
 
 import {MatIconModule} from '@angular/material/icon';
-import { ContentElementComponent } from './chats/chat/message/content-element/content-element.component';
-import { ContentViewComponent } from './chats/chat/message/content-view/content-view.component';
+import { ContentElementComponent } from './messenger/general-components/content-element/content-element.component';
+import { ContentViewComponent } from './messenger/general-components/content-view/content-view.component';
 import { MasterChatComponent } from './layout/master-chat/master-chat.component';
-import { ContextMenuComponent } from './shared/context-menu/context-menu.component';
+import { ContextMenuComponent } from './messenger/general-components/context-menu/context-menu.component';
+import { ChatinfoElementComponent } from './messenger/general-components/chatinfo-element/chatinfo-element.component';
+import { ChatinfoComponent } from './messenger/chatinfo/chatinfo.component';
 const routes: Routes = [
   { path: '', redirectTo: '/log-in', pathMatch: 'full' },
   { path: 'log-in', component: SigninComponent },
@@ -55,7 +57,9 @@ const routes: Routes = [
     ContentElementComponent,
     ContentViewComponent,
     MasterChatComponent,
-    ContextMenuComponent
+    ContextMenuComponent,
+    ChatinfoElementComponent,
+    ChatinfoComponent
   ],
     imports: [
         BrowserModule,

@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Content} from "../../../../shared/Dtos/Content";
-import {Message} from "../../../../shared/Dtos/Message";
+import {Content} from "../../../shared/Dtos/Content";
+import {Message} from "../../../shared/Dtos/Message";
 
 @Component({
   selector: 'app-content-element',
