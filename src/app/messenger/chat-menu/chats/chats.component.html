@@ -1,8 +1,18 @@
-<div class="chats-body">
+<div class="chats">
     <input class="chat-input" placeholder="Find chat...">
-    <app-chat-element *ngFor="let i of this.chats" [chat]="i"></app-chat-element>
-    <div>
-
+    <div class="chats-body">
+        <div>
+            <a routerLink="/chats">chats</a>
+            <button>channels</button>
+        </div>
+        <div class="div-with-scroll chats-container">
+            <app-chat-element *ngFor="let i of this.chats" [chat]="i"></app-chat-element>
+            <button class="btn" (click)="isNewChatFormOpen=true">Create new chat!</button>
+        </div>
+        <div class="user-container">
+            <app-userinfo-element *ngIf="User" [userProfile]="User"></app-userinfo-element>
+        </div>
     </div>
 </div>
+<app-new-chat *ngIf="isNewChatFormOpen" (CloseNewChatEvent)="isNewChatFormOpen=false"></app-new-chat>
 

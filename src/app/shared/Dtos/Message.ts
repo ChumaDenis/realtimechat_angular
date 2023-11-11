@@ -1,4 +1,4 @@
-import {User} from "../../components/Models/user";
+import {User} from "./User";
 import {Content} from "./Content";
 
 

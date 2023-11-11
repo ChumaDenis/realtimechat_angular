@@ -1,3 +1,5 @@
+import {Avatar} from "./Avatar";
+
 export class User {
 
     userName?: string;
@@ -5,4 +7,5 @@ export class User {
     phoneNumber?:string;
     status?:number;
     createDate?: Date;
+    avatar?:Avatar;
 }

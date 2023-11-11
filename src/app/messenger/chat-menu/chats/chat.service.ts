@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User } from '../../../components/Models/user';
+import { User } from '../../../shared/Dtos/User';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import {
@@ -30,6 +30,7 @@ export class ChatService {
     let api = `${this.endpoint}/Chat/${name}`;
     return this.http.get(api,{ headers: this.headers}).pipe(catchError(this.handleError));
   }
+
 
 
   // Error

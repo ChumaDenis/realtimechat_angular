@@ -30,11 +30,13 @@ import { MasterChatComponent } from './layout/master-chat/master-chat.component'
 import { ContextMenuComponent } from './messenger/general-components/context-menu/context-menu.component';
 import { ChatinfoElementComponent } from './messenger/general-components/chatinfo-element/chatinfo-element.component';
 import { ChatinfoComponent } from './messenger/chatinfo/chatinfo.component';
+import { UserinfoElementComponent } from './messenger/chat-menu/userinfo-element/userinfo-element.component';
+import { NewChatComponent } from './messenger/new-chat/new-chat.component';
+import { ChatMenuComponent } from './messenger/chat-menu/chat-menu.component';
 const routes: Routes = [
-  { path: '', redirectTo: '/log-in', pathMatch: 'full' },
+  { path: '', redirectTo: '/chats', pathMatch: 'full' },
   { path: 'log-in', component: SigninComponent },
   { path: 'sign-up', component: SignupComponent },
-  { path: 'user-profile', component: UserProfileComponent, canActivate: [AuthGuard] },
   { path: 'chats', component:MasterChatComponent, canActivate: [AuthGuard],children: [
           { path: ':name', component: ChatComponent, canActivate: [AuthGuard] }]}
 ];
@@ -59,7 +61,10 @@ const routes: Routes = [
     MasterChatComponent,
     ContextMenuComponent,
     ChatinfoElementComponent,
-    ChatinfoComponent
+    ChatinfoComponent,
+    UserinfoElementComponent,
+    NewChatComponent,
+    ChatMenuComponent
   ],
     imports: [
         BrowserModule,

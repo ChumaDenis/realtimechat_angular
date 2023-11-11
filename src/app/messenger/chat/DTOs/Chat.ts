@@ -1,4 +1,4 @@
-import {User} from "../../../components/Models/user";
+import {User} from "../../../shared/Dtos/User";
 
 export class Chat {
 

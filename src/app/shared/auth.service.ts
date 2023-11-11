@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User } from '../components/Models/user';
+import { User } from './Dtos/User';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import {
@@ -37,8 +37,16 @@ export class AuthService {
 
             localStorage.setItem('userName', this.currentUser?.userName||"");
             console.log(localStorage.getItem('userName'));
-            this.router.navigate(['user-profile/']);
+            this.router.navigate(['chats']);
           });
+        });
+  }
+
+  editUser(user:User){
+    return this.http
+        .put<any>(`${this.endpoint}/Auth/edit`, user)
+        .subscribe((res: any) => {
+          this.signIn(user);
         });
   }
 
@@ -54,7 +62,7 @@ export class AuthService {
   doLogout() {
     let removeToken = localStorage.removeItem('access_token');
     if (removeToken == null) {
-      this.router.navigate(['login']);
+      this.router.navigate(['log-in']);
       localStorage.removeItem('userName');
     }
   }
@@ -72,7 +80,10 @@ export class AuthService {
         catchError(this.handleError)
     );
   }
-
+  getUserByName(userName:string){
+    let api = `${this.endpoint}/Auth/info?name=${userName}`;
+    return this.http.get(api, { headers: this.headers }).pipe(catchError(this.handleError));
+  }
   // Error
   handleError(error: HttpErrorResponse) {
     let msg = '';

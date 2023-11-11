@@ -67,21 +67,26 @@ export class ChatComponent implements OnInit, OnDestroy{
 
       this.signalR.createMessageListener(this.ChatInfo?.name||"")
           .pipe(takeUntil(this.subject)).subscribe(data=>{
-              this.Messages?.unshift(data);
+              if(data.chatName==this.ChatInfo?.name)
+                this.Messages?.unshift(data);
           });
 
       this.signalR.updateMessageListener(this.ChatInfo?.name||"")
           .pipe(takeUntil(this.subject)).subscribe(data=>{
-              let message= this.Messages?.find(x=>x.id==data.id)
-              if(message){
-                  message.contentFiles=data.contentFiles;
-                  message.textContent=data.textContent;
+              if(data.chatName==this.ChatInfo?.name){
+                  let message= this.Messages?.find(x=>x.id==data.id)
+                  if(message){
+                      message.contentFiles=data.contentFiles;
+                      message.textContent=data.textContent;
+                  }
               }
+
           });
 
       this.signalR.deleteMessageListener()
-          .pipe(takeUntil(this.subject)).subscribe(x=>{
-              this.Messages= this.Messages?.filter(m=>m.id!=x);
+          .pipe(takeUntil(this.subject)).subscribe(data=>{
+
+              this.Messages= this.Messages?.filter(m=>m.id!=data);
           })
   }
 
@@ -91,7 +96,9 @@ export class ChatComponent implements OnInit, OnDestroy{
       this.IsScrolled=false;
   }
 
-
+    protected Scroll(){
+        console.log(this.scroll.nativeElement.scrollTop);
+    }
 
   protected onMessageChange(message:Message) {
       this.isUpdateMessage=true;
@@ -179,4 +186,7 @@ export class ChatComponent implements OnInit, OnDestroy{
       this.isReplyMessage=false;
       this.replyMessage=undefined;
   }
+
+    protected readonly confirm = confirm;
+    protected readonly console = console;
 }

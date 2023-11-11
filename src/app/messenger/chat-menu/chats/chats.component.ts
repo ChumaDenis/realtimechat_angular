@@ -5,6 +5,10 @@ import {SignalRService} from "./signal-r.service";
 import {first, Subject, takeUntil} from "rxjs";
 import {Message} from "../../../shared/Dtos/Message";
 import {UntilDestroy, untilDestroyed} from "@ngneat/until-destroy";
+import {User} from "../../../shared/Dtos/User";
+import {AuthService} from "../../../shared/auth.service";
+import {AvatarService} from "../../../shared/avatar.service";
+import {ActivatedRoute, Router} from "@angular/router";
 
 
 @Component({
@@ -13,13 +17,19 @@ import {UntilDestroy, untilDestroyed} from "@ngneat/until-destroy";
   styleUrls: ['./chats.component.scss']
 })
 export class ChatsComponent implements OnInit, OnDestroy{
+    protected User?:User;
     public chats:ChatElement[]=[];
     private subject=new Subject<void>();
-  constructor(private service:ChatService, private signalR:SignalRService) {
-    this.service.getChats().pipe(first()).subscribe(data=>{
-          this.FormatLastMessage(data as ChatElement[])
-    });
+    protected isNewChatFormOpen=false;
+  constructor(private service:ChatService, private signalR:SignalRService, private authService:AuthService,
+              private avatarService:AvatarService, private router:Router, private activatedRouter:ActivatedRoute) {
+      this.getChats()
   }
+    getChats(){
+        this.service.getChats().pipe(first()).subscribe(data=>{
+            this.FormatLastMessage(data as ChatElement[])
+        });
+    }
 
     ngOnDestroy(): void {
         this.subject.next();
@@ -27,6 +37,7 @@ export class ChatsComponent implements OnInit, OnDestroy{
     }
 
     private FormatLastMessage(chats:ChatElement[]){
+      this.chats=[];
       chats.map(x =>{
           if(x.lastMessage){
 
@@ -64,8 +75,49 @@ export class ChatsComponent implements OnInit, OnDestroy{
             })
             this.SortChats();
         });
-    }
+        this.authService.getUserProfile().pipe(first()).subscribe(x=> {
+            this.User = x
+            this.downloadAvatar();
+        })
 
+        this.signalR.AddChatListener().pipe(takeUntil(this.subject)).subscribe(x=>{
+            this.router.navigate([`/chats/${x}`]);
+            this.getChats();
+        })
+        this.signalR.UpdateChatListener().pipe(takeUntil(this.subject)).subscribe((x)=>{
+            this.activatedRouter.params.pipe(first()).subscribe(y=>{
+                if(y[0]!=x.newName){
+                    this.router.navigate([`/chats/${x.newName}`]);
+                }
+            })
+            this.getChats();
+        })
+        this.signalR.DeleteChatListener().pipe(takeUntil(this.subject)).subscribe((x)=>{
+            this.activatedRouter.params.pipe(first()).subscribe(y=>{
+                if(y[0]!=x){
+                    this.router.navigate([`/chats`]);
+                }
+            })
+            this.getChats();
+        })
+    }
+    downloadAvatar(){
+        const avatarJson=JSON.parse(localStorage.getItem("userAvatar")||"");
+        console.log(avatarJson);
+        if(avatarJson || avatarJson.id!=this.User?.avatar?.id){
+            this.avatarService.getAvatar(this.User?.userName||"").pipe().subscribe(file=>{
+                let x=this.avatarService.convertBlobToBase64(file);
+                x.subscribe((y:any)=>{
+                    const avatarInfo={
+                        id:this.User?.avatar?.id,
+                        file:`${y}`
+                    };
+                    localStorage.setItem("userAvatar", JSON.stringify(avatarInfo))
+                })
+            })
+        }
+
+    }
 
     private SortChats() {
         this.chats= this.chats.sort((a, b) => {

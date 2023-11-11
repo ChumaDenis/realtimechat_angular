@@ -7,8 +7,9 @@ import {Message} from "../../../shared/Dtos/Message";
 import {Chat} from "../../chat/DTOs/Chat";
 import {ChatElement} from "../../chat/DTOs/ChatElement";
 import {AuthService} from "../../../shared/auth.service";
-import {User} from "../../../components/Models/user";
+import {User} from "../../../shared/Dtos/User";
 import {UserStatus} from "../../../shared/Dtos/UserStatus";
+import {catchError} from "rxjs/operators";
 
 
 
@@ -33,6 +34,8 @@ export class SignalRService {
     })
     this.hubConnection?.invoke('ConnectToGroup').then(x=>console.log(`connect to groups`));
   }
+
+
   public getUserStatus(userNames:string[]){
       this.hubConnection?.invoke<any>("GetUsersStatus", userNames).then()
       const subject=new Subject<UserStatus[]>();
@@ -64,6 +67,52 @@ export class SignalRService {
       subject.next(data);
     })
     return subject;
+  }
+  public AddChatListener(){
+    const subject=new Subject<string>()
+    this.hubConnection?.on("AddChatInfo", x => {
+      console.log(x);
+      subject.next(x);
+    })
+    return subject;
+  }
+  public UpdateChatListener(){
+    const subject=new Subject<any>()
+    this.hubConnection?.on("UpdateChatInfo", (x:string, y:string) => {
+      subject.next( {newName: x, oldName:y});
+    })
+    return subject;
+  }
+  public DeleteChatListener(){
+    const subject=new Subject<string>()
+    this.hubConnection?.on("DeleteChatsInfo", (x) => {
+      subject.next(x);
+    })
+    return subject;
+  }
+  public createChat(chatName:string){
+    const body={
+      Name:chatName
+    }
+    return  this.hubConnection?.invoke(`CreateChat`, body).then()
+  }
+  addUserToChat(chatName:string, userName:string){
+    return  this.hubConnection?.invoke(`AddUser`, chatName, userName).then()
+  }
+  editChat(chatName:string, newChatName:string){
+    const body={
+      Name:newChatName
+    }
+    return this.hubConnection?.invoke(`UpdateChat`, body, chatName).then();
+  }
+  leaveChat(chatName:string){
+    return  this.hubConnection?.invoke(`LeaveChat`, chatName).then();
+  }
+  removeUser(chatName:string, userName:string){
+    return  this.hubConnection?.invoke(`RemoveUser`, chatName).then();
+  }
+  deleteChat(chatName:string){
+    return  this.hubConnection?.invoke(`DeleteChat`, chatName).then();
   }
   public connect = () => {
     this.startConnection();

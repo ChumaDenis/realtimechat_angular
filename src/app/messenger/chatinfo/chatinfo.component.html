@@ -2,28 +2,50 @@
     <div class="chatinfo">
         <div class="chatinfo-header">
             <h3>Chat Info</h3>
-            <div style="display: flex">
-                <button class="btn" (click)="CloseChatInfo.emit()">
+            <div style="display: flex;position: relative;">
+
+                <button class="btn" (click)="this.isDisplayContextMenu=!this.isDisplayContextMenu">
                     <mat-icon>more_vert</mat-icon>
                 </button>
+                <app-context-menu
+                        *ngIf="clickMenuItems.length > 0 && isDisplayContextMenu"
+                        style="position: absolute;left: -120px;z-index: 999"
+                        [contextMenuItems]="clickMenuItems"
+                        (onContextMenuItemClick)="handleMenuItemClick($event)"
+                ></app-context-menu>
                 <button class="btn" (click)="CloseChatInfo.emit()">
                     <mat-icon>close</mat-icon>
                 </button>
             </div>
         </div>
+        <div *ngIf="!isOpenEditMode&&!isOpenAddUserMode">
+            <h5>{{chatInfo?.name}}</h5>
+            <hr>
+            <h6>Users:</h6>
+            <div class="chatinfo-users"  *ngIf="this.chatInfo">
+                <app-userinfo-element class="chatinfo-user" *ngFor="let user of this.chatInfo?.userViewModels" [userProfile]="user">
+                </app-userinfo-element>
 
-        <h5>{{chatInfo?.name}}</h5>
-        <hr>
-        <h6>Users:</h6>
-        <div class="chatinfo-users" *ngIf="this.chatInfo">
-            <div class="chatinfo-user" *ngFor="let user of this.chatInfo?.userViewModels">
-              <p>
-                {{user.userName}}
-              </p>
-              <p>
-                {{user.status}}
-              </p>
             </div>
         </div>
+        <div *ngIf="isOpenEditMode && this.chatInfo">
+            <input type="text" [(ngModel)]="editName">
+            <button class="btn" (click)="this.editChat()">
+                <mat-icon>edit</mat-icon>
+                Edit
+            </button>
+        </div>
+        <div *ngIf="isOpenAddUserMode && this.chatInfo">
+            <input type="text" [(ngModel)]="addUserName">
+            <button class="btn" (click)="this.findUser()">
+                <mat-icon>search</mat-icon>
+            </button>
+            <app-userinfo-element *ngIf="AddUser" [userProfile]="AddUser"></app-userinfo-element>
+            <button [disabled]="!AddUser" class="btn" (click)="this.addUser()">
+                <mat-icon>add</mat-icon>
+                AddUser
+            </button>
+        </div>
+
     </div>
 </div>
