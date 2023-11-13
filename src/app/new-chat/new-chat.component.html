@@ -1,0 +1,28 @@
+<div class="user-profile-container">
+    <div class="container">
+        <div>
+            <button (click)="isChat=true">Chat</button>
+            <button (click)="isChat=false">Channel</button>
+        </div>
+        <input type="text" [(ngModel)]="chatName">
+        <input type="text" [(ngModel)]="description">
+        <div *ngIf="!isChat">
+            <div style="display: flex; flex-direction: column">
+                <div id="text">Privacy :</div>
+                <div>
+                    <input type="radio" #radio1 name="default" checked="true" (change)='changeOption1()'/>
+                    <label>private</label>
+                </div>
+                <div>
+                    <input type="radio" #radio2 name="default"  checked="false" (change)='changeOption2()'/>
+                    <label>public</label>
+                </div>
+
+            </div>
+        </div>
+
+
+        <button (click)="CreateChat()">Create</button>
+        <button (click)="CloseNewChatEvent.emit()"><mat-icon>close</mat-icon></button>
+    </div>
+</div>
