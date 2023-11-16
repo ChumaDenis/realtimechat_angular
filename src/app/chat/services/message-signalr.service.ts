@@ -8,7 +8,7 @@ import {UserStatus} from "../../shared/Dtos/Auth/UserStatus";
 import {Message} from "../messeges/DTOs/Message";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class MessageSignalrService {
   private connectionUrl = 'https://localhost:7068/signalr';

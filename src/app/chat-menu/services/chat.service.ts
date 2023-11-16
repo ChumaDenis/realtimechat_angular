@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { User } from '../../shared/Dtos/Auth/User';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import {
@@ -10,7 +9,7 @@ import {
 import { Router } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'any',
 })
 export class ChatService {
   endpoint: string = 'https://localhost:7068/api';

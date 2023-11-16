@@ -1,12 +1,12 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Chat} from "../chat/DTOs/Chat";
-import {SignalRService} from "../chat-menu/services/signal-r.service";
+import {Chat} from "../../DTOs/Chat";
+import {SignalRService} from "../../../chat-menu/services/signal-r.service";
 import {first, from, Observable} from "rxjs";
 import {fromPromise} from "rxjs/internal/observable/innerFrom";
 import {UntilDestroy, untilDestroyed} from "@ngneat/until-destroy";
-import {ChatService} from "../chat-menu/services/chat.service";
-import {AuthService} from "../shared/auth.service";
-import {User} from "../shared/Dtos/Auth/User";
+import {ChatService} from "../../../chat-menu/services/chat.service";
+import {AuthService} from "../../../shared/auth.service";
+import {User} from "../../../shared/Dtos/Auth/User";
 @UntilDestroy()
 @Component({
   selector: 'app-chatinfo',

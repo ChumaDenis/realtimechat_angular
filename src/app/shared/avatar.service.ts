@@ -5,7 +5,7 @@ import {Observable, Observer, throwError} from "rxjs";
 import {catchError} from "rxjs/operators";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class AvatarService {
 

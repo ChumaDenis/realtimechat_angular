@@ -1,10 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {AuthService} from "../../auth.service";
+import {AuthService} from "../../shared/auth.service";
 import {first, Observable, Observer} from "rxjs";
-import {User} from "../../Dtos/Auth/User";
-import {AvatarService} from "../../avatar.service";
+import {User} from "../../shared/Dtos/Auth/User";
+import {AvatarService} from "../../shared/avatar.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
-import {SignalRService} from "../../../chat-menu/services/signal-r.service";
+import {SignalRService} from "../../chat-menu/services/signal-r.service";
 
 @Component({
   selector: 'app-userinfo-element',

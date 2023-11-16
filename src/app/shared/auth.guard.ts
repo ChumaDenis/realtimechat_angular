@@ -7,9 +7,10 @@ import {
 } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from './../shared/auth.service';
+import {AppModule} from "../app.module";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'any',
 })
 export class AuthGuard {
   constructor(public authService: AuthService, public router: Router) {}

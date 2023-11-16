@@ -4,12 +4,9 @@ import {Router} from "@angular/router";
 import {Observable, throwError} from "rxjs";
 import {catchError} from "rxjs/operators";
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class MessageService {
-  @Injectable({
-    providedIn: 'root',
-  })
   endpoint: string = 'https://localhost:7068/api';
   headers = new HttpHeaders().append('Content-Type', 'application/json');
   constructor(private http: HttpClient, public router: Router) {

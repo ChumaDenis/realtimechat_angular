@@ -11,7 +11,7 @@ import {UnreadMessages} from "../../chat/DTOs/UnreadMessages";
 
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class SignalRService {
   private connectionUrl = 'https://localhost:7068/signalr';

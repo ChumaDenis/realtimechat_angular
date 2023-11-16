@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {ChatService} from "../chat-menu/services/chat.service";
-import {SignalRService} from "../chat-menu/services/signal-r.service";
+import {ChatService} from "../../services/chat.service";
+import {SignalRService} from "../../services/signal-r.service";
 
 @Component({
   selector: 'app-new-chat',
