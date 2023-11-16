@@ -1,13 +1,14 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Message} from "./messeges/DTOs/Message";
 import {Chat} from "./DTOs/Chat";
-import {ChatService} from "../chat-menu/chat.service";
+import {ChatService} from "../chat-menu/services/chat.service";
 import {MessageService} from "./services/message.service";
 import {ActivatedRoute} from "@angular/router";
 import {FormGroup, FormBuilder} from "@angular/forms";
 import {first, Subject, takeUntil} from "rxjs";
-import {SignalRService} from "../chat-menu/signal-r.service";
+import {SignalRService} from "../chat-menu/services/signal-r.service";
 import {MessageSignalrService} from "./services/message-signalr.service";
+import {PagedList} from "../shared/Dtos/PagedList";
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
@@ -18,16 +19,19 @@ export class ChatComponent implements OnInit, OnDestroy{
   @ViewChild('scroll', { read: ElementRef }) public scroll: ElementRef<any>;
   // @ts-ignore
   protected sendMessageForm: FormGroup;
-  protected IsScrolled=true;
   protected Messages?:Message[];
+  protected fileList:File[]=[];
+  protected ChatInfo?:Chat;
 
   protected isReplyMessage:boolean=false;
   protected isUpdateMessage:boolean=false;
+  protected IsScrolled=true;
+  protected hasNextPages:boolean=false;
+
   protected UpdateMessage?:Message;
-  protected fileList:File[]=[];
-  protected ChatInfo?:Chat;
-  private subject=new Subject<void>()
-  public replyMessage?: Message;
+  protected replyMessage?: Message;
+  private subject=new Subject<void>();
+
 
   constructor(
       public fb: FormBuilder,
@@ -36,24 +40,29 @@ export class ChatComponent implements OnInit, OnDestroy{
       private route: ActivatedRoute,
       private signalR:MessageSignalrService) {
 
-    this.route.params.pipe(takeUntil(this.subject)).subscribe(p=>{
-      this.chatService.getChat(p.name).pipe(first()).subscribe(data=>{
-        this.ChatInfo=data;
-        localStorage.setItem("currentChat",data?.name||"");
-        localStorage.setItem("currentChatOwner",data?.chatOwner?.userName||"");
-
-        this.messageService.getMessages(data?.name||"").pipe(first()).subscribe(messages=>{
-          this.Messages=messages.items;
-          this.SetSignalR();
-          this.IsScrolled=false;
-        })
+      this.route.params.pipe(takeUntil(this.subject)).subscribe(p=>{
+          this.chatService.getChat(p.name).pipe(first()).subscribe(data=>{
+              this.ChatInfo=data;
+              localStorage.setItem("currentChat",data?.name||"");
+              localStorage.setItem("currentChatOwner",data?.chatOwner?.userName||"");
+              this.messageService.getMessages(data?.name||"").pipe(first()).subscribe(messages=>{
+                  console.log(messages)
+                  this.Messages=messages.items;
+                  this.SetSignalRListeners();
+                  this.hasNextPages=messages.hasNext;
+                  this.IsScrolled=false;
+              })
+          })
       })
-    })
   }
+
+
+
   ngOnInit(): void {
       console.log(this.ChatInfo?.name);
       this.sendMessageForm = this.fb.group({
-          TextContent: ['']
+          TextContent: [''],
+          SendTime:undefined
       })
 
   }
@@ -63,12 +72,20 @@ export class ChatComponent implements OnInit, OnDestroy{
       localStorage.removeItem("currentChat");
       localStorage.removeItem("currentChatOwner");
   }
-  private SetSignalR(){
+  protected JoinChat(){
+      this.signalR.joinUserToChat(this.ChatInfo?.name||"")?.then();
+  }
+  private LoadChatInfo(name:string){
+      this.chatService.getChat(name).pipe(first()).subscribe(data=>{
+          this.ChatInfo=data;
+      })
+  }
+  private SetSignalRListeners(){
       this.signalR.connect();
 
       this.signalR.createMessageListener(this.ChatInfo?.name||"")
           .pipe(takeUntil(this.subject)).subscribe(data=>{
-              if(data.chatName==this.ChatInfo?.name)
+              if(data.chatName==this.ChatInfo?.name && !this.Messages?.find(x=>x.id==data.id))
                 this.Messages?.unshift(data);
           });
 
@@ -88,6 +105,13 @@ export class ChatComponent implements OnInit, OnDestroy{
           .pipe(takeUntil(this.subject)).subscribe(data=>{
               this.Messages= this.Messages?.filter(m=>m.id!=data);
           })
+
+      this.signalR.reloadChatListener().pipe(takeUntil(this.subject)).subscribe(chatName=>{
+          if(chatName==this.ChatInfo?.name){
+              this.LoadChatInfo(chatName);
+          }
+
+      })
   }
 
   protected ScrollToBottom(){
@@ -96,15 +120,23 @@ export class ChatComponent implements OnInit, OnDestroy{
       this.IsScrolled=false;
   }
 
-    protected Scroll(){
-        console.log(this.scroll.nativeElement.scrollTop);
-    }
+  protected OnScroll(){
+      if(-this.scroll.nativeElement.scrollTop+this.scroll.nativeElement.offsetHeight+50>=this.scroll.nativeElement.scrollHeight
+          &&this.hasNextPages){
+          this.messageService.getMessages(this.ChatInfo?.name||"").pipe(first()).subscribe((x:PagedList<Message>)=>{
+              this.hasNextPages=x.hasNext||false;
+              x.items?.forEach(y=>this.Messages?.push(y));
+          });
+      }
+  }
 
   protected onMessageChange(message:Message) {
       this.isUpdateMessage=true;
+      this.isReplyMessage=false;
+      this.replyMessage=undefined;
       this.UpdateMessage=message;
       this.sendMessageForm.patchValue({TextContent:message.textContent||""});
-
+      this.CloseReply();
       message.contentFiles?.map(content=>{
           this.messageService.downloadFile(content.id||"").pipe(first())
               .subscribe(blob=>{
@@ -112,12 +144,13 @@ export class ChatComponent implements OnInit, OnDestroy{
               })
       });
   }
+
   protected onMessageReply(message:Message){
     this.isReplyMessage=true;
     this.replyMessage=message;
   }
 
-  detectFiles(event:Event) {
+  protected detectFiles(event:Event) {
       let files = (event.target as HTMLInputElement).files;
       if (files) {
         // @ts-ignore
@@ -140,37 +173,43 @@ export class ChatComponent implements OnInit, OnDestroy{
       this.fileList=this.fileList.filter(x=>x.name!=fileName);
   }
 
+
   protected sendMessage(){
-      // @ts-ignore
-      const formData= new FormData();
-      Object.keys(this.sendMessageForm.controls).forEach(formControlName => {
-        formData.append(formControlName,  this.sendMessageForm.get(formControlName)?.value);
-      });
-      formData.append("OwnerName", this.ChatInfo?.name);
-      if(this.fileList.length>0){
-          for (let i = 0; i < this.fileList.length; i++) {
-              formData.append("Files", this.fileList[i]);
+      if(this.sendMessageForm.get("TextContent")?.value!=""||this.fileList.length!=0){
+          // @ts-ignore
+          const formData= new FormData();
+          formData.append("TextContent",  this.sendMessageForm.get("TextContent")?.value);
+          if(this.sendMessageForm.get("SendTime")?.value &&this.parseDateString(this.sendMessageForm.get("SendTime")?.value).getTime()>Date.now()){
+              formData.append("SendTime", this.sendMessageForm.get("SendTime")?.value);
+          }
+
+          formData.append("OwnerName", this.ChatInfo?.name);
+          if(this.fileList.length>0){
+              for (let i = 0; i < this.fileList.length; i++) {
+                  formData.append("Files", this.fileList[i]);
+              }
+          }
+
+          if(this.isReplyMessage){
+              formData.append("ReplyMessageId", this.replyMessage?.id);
+          }
+
+          if(this.isUpdateMessage)
+          {
+              formData.append('Id', this.UpdateMessage?.id);
+              this.messageService.updateMessage(formData).pipe(first()).subscribe(x=>{
+                  this.clearForm();
+                  this.ScrollToBottom();
+              });
+          }
+          else{
+              this.messageService.sendMessage(formData).pipe(first()).subscribe(x=>{
+                  this.clearForm();
+                  this.ScrollToBottom();
+              });
           }
       }
 
-      if(this.isReplyMessage){
-        formData.append("ReplyMessageId", this.replyMessage?.id);
-      }
-
-      if(this.isUpdateMessage)
-      {
-          formData.append('Id', this.UpdateMessage?.id);
-          this.messageService.updateMessage(formData).pipe(first()).subscribe(x=>{
-              this.clearForm();
-              this.ScrollToBottom();
-          });
-      }
-      else{
-          this.messageService.sendMessage(formData).pipe(first()).subscribe(x=>{
-              this.clearForm();
-              this.ScrollToBottom();
-          });
-      }
   }
   protected clearForm(){
       this.UpdateMessage=undefined;
@@ -179,14 +218,20 @@ export class ChatComponent implements OnInit, OnDestroy{
       this.replyMessage=undefined;
       this.sendMessageForm.patchValue({TextContent:""});
       this.fileList=[];
+      this.sendMessageForm.patchValue({SendTime:undefined})
   }
-  protected readonly onscroll = onscroll;
-
   protected CloseReply(){
       this.isReplyMessage=false;
       this.replyMessage=undefined;
   }
 
-    protected readonly confirm = confirm;
-    protected readonly console = console;
+  private parseDateString(date:string): Date {
+      date = date.replace('T','-');
+      var parts = date.split('-');
+      var timeParts = parts[3].split(':');
+
+      // @ts-ignore
+      return new Date(parts[0], parts[1]-1, parts[2], timeParts[0], timeParts[1]);
+
+  }
 }

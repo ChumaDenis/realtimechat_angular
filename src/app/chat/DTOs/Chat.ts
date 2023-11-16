@@ -9,6 +9,7 @@ export class Chat {
     privacy?:boolean;
     isChat?:boolean;
     isOwner?:boolean;
+    isSubscribe?:boolean;
     createDate?:Date;
 
 }

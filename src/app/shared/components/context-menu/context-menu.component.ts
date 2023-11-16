@@ -11,13 +11,9 @@ export class ContextMenuModel {
   styleUrls: ['./context-menu.component.scss']
 })
 export class ContextMenuComponent {
-  @Input()
-  contextMenuItems?: Array<ContextMenuModel>;
-
-  @Output()
-  onContextMenuItemClick: EventEmitter<any> = new EventEmitter<any>();
-
-  onContextMenuClick(event:Event, data?:ContextMenuModel): any {
+  @Input() contextMenuItems?: Array<ContextMenuModel>;
+  @Output() onContextMenuItemClick: EventEmitter<any> = new EventEmitter<any>();
+  protected onContextMenuClick(event:Event, data?:ContextMenuModel): any {
     if(data)
       this.onContextMenuItemClick.emit({
         event,

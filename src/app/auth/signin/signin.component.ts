@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../../shared/auth.service';
 import { Router } from '@angular/router';
+import {GoogleLoginProvider, SocialAuthService} from "angularx-social-login";
 
 @Component({
   selector: 'app-signin',
@@ -14,9 +15,8 @@ export class SigninComponent implements OnInit {
 
   constructor(
       public fb: FormBuilder,
-      public authService: AuthService,
-      public router: Router
-  ) {
+      public myAuthService: AuthService,
+      public router: Router) {
     this.signinForm = this.fb.group({
       username: "",
       password: "",
@@ -26,6 +26,6 @@ export class SigninComponent implements OnInit {
   ngOnInit() {}
 
   loginUser() {
-    this.authService.signIn(this.signinForm.value);
+    this.myAuthService.signIn(this.signinForm.value);
   }
 }

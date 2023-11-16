@@ -11,10 +11,11 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.scss'],
 })
-export class UserProfileComponent implements OnInit, OnDestroy {
+export class UserProfileComponent implements OnInit{
   @Input() User?:User;
   protected userEdit?:User;
   @Output() CloseUserProfileEvent=new EventEmitter<any>();
+  protected isOwner:boolean=false;
   protected isEditMode:boolean=false;
   protected isDisplayContextMenu?: boolean;
   public clickMenuItems = [
@@ -58,12 +59,9 @@ export class UserProfileComponent implements OnInit, OnDestroy {
               private sanitaizer:DomSanitizer, private router:Router) {
   }
 
-  ngOnDestroy(): void {
-        console.log("OnDestroy");
-    }
   protected avatar?:SafeUrl;
   ngOnInit() {
-    console.log("OnInit")
+    this.isOwner=localStorage.getItem("userName")==this.User?.userName;
     if(this.User?.avatar)
       this.downloadAvatar()
   }

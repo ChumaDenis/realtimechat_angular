@@ -14,12 +14,14 @@ export class MessageComponent implements OnInit{
   @Input() message:Message=new Message();
   @Output() MessageChangeEvent = new EventEmitter<Message>()
   @Output() MessageReplyEvent = new EventEmitter<Message>()
+  @Output() MessageForwardEvent = new EventEmitter<string>()
 
   protected isYourMessage?:boolean=false;
   protected isYourChat:boolean=false;
   protected isActive:boolean=false;
   protected hasFiles=false;
   protected currentContent?:Content;
+  protected forwardMessage:boolean=false;
 
   constructor(private service:MessageService) {
   }
@@ -32,22 +34,24 @@ export class MessageComponent implements OnInit{
     if(this.message.contentFiles && this.message.contentFiles.length>0)
       this.hasFiles=true;
   }
-  protected updateMessage() {
+  protected UpdateMessage() {
     this.MessageChangeEvent.emit(this.message);
   }
   protected ReplyMessage() {
     this.MessageReplyEvent.emit(this.message);
   }
-  protected deleteMessage(){
+  protected DeleteMessage(){
     this.service.deleteMessage(localStorage.getItem("currentChat")||"",this.message.id||"")
         .pipe(first()).subscribe();
   }
-
-  protected filterContent(){
+  protected ForwardMessage(){
+    this.forwardMessage=true;
+  }
+  protected FilterContent(){
     return this.message.contentFiles?.filter(x=>x.eContentType!=3);
   }
 
-  protected getMessageStyles() {
+  protected GetMessageStyles() {
       let userName=localStorage.getItem("userName");
       if (userName===this.message.owner?.userName) {
         return 'margin-left: auto;';
@@ -55,16 +59,9 @@ export class MessageComponent implements OnInit{
       return '';
   }
 
-
-  private CheckRoots(){
-    if(this.message.owner?.userName==localStorage.getItem("userName"))
-      this.isYourMessage=true;
-    if(localStorage.getItem("currentChatOwner")==localStorage.getItem("userName"))
-      this.isYourChat=true;
-  }
   private FormatMessage(message:Message){
 
-    if(message){
+    if(message&&message){
       if(message?.textContent==null&&message.contentFiles){
         let text="";
         // @ts-ignore
@@ -87,41 +84,48 @@ export class MessageComponent implements OnInit{
 
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-  title = 'context-menu';
-
-  isDisplayContextMenu?: boolean;
-  rightClickMenuItems: Array<ContextMenuModel> = [];
-  rightClickMenuPositionX?: number;
-  rightClickMenuPositionY?: number;
-
-  displayContextMenu(event:Event) {
+  protected isDisplayContextMenu?: boolean;
+  protected rightClickMenuItems: Array<ContextMenuModel> = [];
+  protected rightClickMenuPositionX?: number;
+  protected rightClickMenuPositionY?: number;
+  private menuItems: Array<ContextMenuModel> = [
+    {
+    menuText: 'Reply',
+    menuEvent: 'Handle reply',
+    },
+    {
+      menuText: 'Forward',
+      menuEvent: 'Handle forward',
+    },
+    {
+    menuText: 'Edit',
+    menuEvent: 'Handle edite',
+    },
+    {
+      menuText: 'Delete',
+      menuEvent: 'Handle delete',
+    }
+  ];
+  protected displayContextMenu(event:Event) {
     this.isDisplayContextMenu = true;
     this.rightClickMenuItems = [
       {
         menuText: 'Reply',
         menuEvent: 'Handle reply',
+      },
+      {
+        menuText: 'Forward',
+        menuEvent: 'Handle forward',
       }
     ];
     if(this.isYourMessage){
       this.rightClickMenuItems.push({
-              menuText: 'Edit',
-              menuEvent: 'Handle edite',
+            menuText: 'Edit',
+            menuEvent: 'Handle edite',
           },
           {
-              menuText: 'Delete',
-              menuEvent: 'Handle delete',
+            menuText: 'Delete',
+            menuEvent: 'Handle delete',
           })
     }
     else if(this.isYourChat){
@@ -138,34 +142,50 @@ export class MessageComponent implements OnInit{
 
   }
 
-
-  getRightClickMenuStyle() {
+  protected getRightClickMenuStyle() {
     return {
       position: 'fixed',
       left: `${this.rightClickMenuPositionX}px`,
       top: `${this.rightClickMenuPositionY}px`
     }
   }
-
-  handleMenuItemClick(event:Event) {
-    // @ts-ignore
-      console.log(event.data.menuEvent);
-    // @ts-ignore
-      switch (event.data.menuEvent) {
-      case this.rightClickMenuItems[0].menuEvent:
+  private CheckRoots(){
+    if(this.message.owner?.userName==localStorage.getItem("userName"))
+      this.isYourMessage=true;
+    if(localStorage.getItem("currentChatOwner")==localStorage.getItem("userName"))
+      this.isYourChat=true;
+  }
+  protected handleMenuItemClick(event:Event) {
+      // @ts-ignore
+    switch (event.data.menuEvent) {
+      case this.menuItems[0].menuEvent:
         this.ReplyMessage();
         break;
-      case this.rightClickMenuItems[1].menuEvent:
-        this.updateMessage();
+      case this.menuItems[1].menuEvent:
+        this.ForwardMessage();
         break;
-      case this.rightClickMenuItems[2].menuEvent:
-        this.deleteMessage();
+      case this.menuItems[2].menuEvent:
+        this.UpdateMessage();
+        break;
+      case this.menuItems[3].menuEvent:
+        this.DeleteMessage();
     }
   }
 
   @HostListener('document:click')
   documentClick(): void {
     this.isDisplayContextMenu = false;
+    this.isOpen=false;
   }
-
+  protected isOpen=false
+  @HostListener('document:contextmenu')
+  documentContextMenuClick(): void {
+    if(!this.isOpen){
+      this.isOpen=true;
+    }
+    else if(this.isDisplayContextMenu){
+      this.isDisplayContextMenu = false;
+      this.isOpen=false;
+    }
+  }
 }

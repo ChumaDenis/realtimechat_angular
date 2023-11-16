@@ -26,10 +26,12 @@ import { ContentElementComponent } from './chat/messeges/message/components/cont
 import { ContentViewComponent } from './chat/messeges/message/components/content-view/content-view.component';
 import { MasterChatComponent } from './layout/master-chat/master-chat.component';
 import { ContextMenuComponent } from './shared/components/context-menu/context-menu.component';
-import { ChatinfoElementComponent } from './shared/components/chatinfo-element/chatinfo-element.component';
-import { ChatinfoComponent } from './chatinfo/chatinfo.component';
+import { ChatinfoElementComponent } from './chat/components/chatinfo-element/chatinfo-element.component';
+import { ChatInfoComponent } from './chatinfo/chat-info.component';
 import { UserinfoElementComponent } from './shared/components/userinfo-element/userinfo-element.component';
 import { NewChatComponent } from './new-chat/new-chat.component';
+import { SelectChatsComponent } from './chat/components/select-chats/select-chats.component';
+
 const routes: Routes = [
 
   { path: 'log-in', component: SigninComponent },
@@ -57,9 +59,10 @@ const routes: Routes = [
     MasterChatComponent,
     ContextMenuComponent,
     ChatinfoElementComponent,
-    ChatinfoComponent,
+    ChatInfoComponent,
     UserinfoElementComponent,
-    NewChatComponent
+    NewChatComponent,
+    SelectChatsComponent
   ],
     imports: [
         BrowserModule,

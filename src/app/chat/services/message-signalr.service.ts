@@ -15,8 +15,9 @@ export class MessageSignalrService {
   private hubConnection?: HubConnection;
   constructor(private http: HttpClient, public router: Router,private authService: AuthService) { }
 
-
-
+  public joinUserToChat(chatName:string){
+    return  this.hubConnection?.invoke(`JoinUser`, chatName).then()
+  }
   public createMessageListener(chatName:string){
     const subject=new Subject<Message>()
     this.hubConnection?.on(`CreateMessage/Chat/${chatName}`, (data: Message) => {
@@ -38,10 +39,13 @@ export class MessageSignalrService {
     })
     return subject;
   }
-
-
-
-
+  public reloadChatListener(){
+    const subject=new Subject<string>()
+    this.hubConnection?.on(`ChangeChat`, (data: string) => {
+      subject.next(data);
+    })
+    return subject;
+  }
   private connectToGroup(){
     this.hubConnection?.on(`UsersStatus`, (data) => {
       console.log(data)

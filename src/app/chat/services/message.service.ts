@@ -14,22 +14,29 @@ export class MessageService {
   headers = new HttpHeaders().append('Content-Type', 'application/json');
   constructor(private http: HttpClient, public router: Router) {
   }
+  currentMessagePage:number=0;
+  currentChat:string="";
   getMessages(name:string ): Observable<any> {
     this.headers.append('Content-Type', 'application/json')
-    let api = `${this.endpoint}/ChatMessage/get?chatName=${name}&PageNumber=1&PageSize=20`;
+    if(this.currentChat!=name){
+      this.currentMessagePage=0;
+    }
+    this.currentChat=name;
+    this.currentMessagePage+=1;
+    let api = `${this.endpoint}/Message/get?chatName=${name}&PageNumber=${this.currentMessagePage}&PageSize=10`;
     return this.http.get(api,{ headers: this.headers}).pipe(catchError(this.handleError));
   }
   sendMessage(message:FormData){
-    let api = `${this.endpoint}/ChatMessage/create`;
+    let api = `${this.endpoint}/Message/create`;
     return this.http.post(api, message).pipe(catchError(this.handleError));
   }
   updateMessage(message:FormData){
-    let api = `${this.endpoint}/ChatMessage/update`;
+    let api = `${this.endpoint}/Message/update`;
     return this.http.put(api, message).pipe(catchError(this.handleError));
   }
   deleteMessage(name:string, messageId:string){
     this.headers.append('Content-Type', 'application/json')
-    let api = `${this.endpoint}/ChatMessage/delete?chatName=${name}&messageId=${messageId}`;
+    let api = `${this.endpoint}/Message/delete?chatName=${name}&messageId=${messageId}`;
     return this.http.delete(api,{ headers: this.headers}).pipe(catchError(this.handleError));
   }
   downloadFile(contentId:string){
@@ -37,8 +44,11 @@ export class MessageService {
       let api = `${this.endpoint}/content/${contentId}`;
       return this.http.get(api,{ responseType: 'blob' }).pipe(catchError(this.handleError));
   }
-
-  handleError(error: HttpErrorResponse) {
+  forwardMessage(messageId:string, chatName:string){
+    let api = `${this.endpoint}/Message/forward?messageId=${messageId}&chatName=${chatName}`;
+    return this.http.post(api, {}).pipe(catchError(this.handleError));
+  }
+  private handleError(error: HttpErrorResponse) {
     let msg = '';
     if (error.error instanceof ErrorEvent) {
       msg = error.error.message;

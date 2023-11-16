@@ -1,9 +1,12 @@
-<div class="chat-component" (click)="click()" >
+<div class="chat-component" (click)="OnClick()" >
     <h5 class="chatName">{{chat.name}}</h5>
     <p class="message-date">{{chat.lastMessage?.sendTime | date:'HH:mm dd/MM/yy'}}</p>
     <div style=" display: flex ">
         <h6 class="userName">{{chat.lastMessage?.owner?.userName}}: </h6>
         <p class="text single-line">{{chat.lastMessage?.textContent}}</p>
+        <div class="unread-messages" *ngIf="chat.unreadMessages?.unreadMessage!=0">
+            <p >{{chat.unreadMessages?.unreadMessage}}</p>
+        </div>
     </div>
 </div>
 

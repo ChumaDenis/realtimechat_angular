@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User } from '../shared/Dtos/Auth/User';
+import { User } from '../../shared/Dtos/Auth/User';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import {
@@ -21,7 +21,6 @@ export class ChatService {
 
   }
 
-  // Sign-up
   getChats(): Observable<any> {
     let api = `${this.endpoint}/Chat/chats`;
     return this.http.get(api,{ headers: this.headers}).pipe(catchError(this.handleError));
@@ -30,7 +29,10 @@ export class ChatService {
     let api = `${this.endpoint}/Chat/${name}`;
     return this.http.get(api,{ headers: this.headers}).pipe(catchError(this.handleError));
   }
-
+  getPublicChat(): Observable<any> {
+    let api = `${this.endpoint}/Chat/public-channels`;
+    return this.http.get(api,{ headers: this.headers}).pipe(catchError(this.handleError));
+  }
 
 
   // Error

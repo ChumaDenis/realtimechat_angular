@@ -3,9 +3,10 @@ import {HubConnection, HubConnectionBuilder} from "@microsoft/signalr";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {Subject, throwError} from "rxjs";
-import {Message} from "../chat/messeges/DTOs/Message";
-import {AuthService} from "../shared/auth.service";
-import {UserStatus} from "../shared/Dtos/Auth/UserStatus";
+import {Message} from "../../chat/messeges/DTOs/Message";
+import {AuthService} from "../../shared/auth.service";
+import {UserStatus} from "../../shared/Dtos/Auth/UserStatus";
+import {UnreadMessages} from "../../chat/DTOs/UnreadMessages";
 
 
 
@@ -24,15 +25,19 @@ export class SignalRService {
     })
     return subject;
   }
+  public addListenerForUnreadMessages() {
+    const subject=new Subject<Message>()
+    this.hubConnection?.on(`UnreadMessages`, (data: UnreadMessages) => {
+      subject.next(data);
+    })
+    return subject;
+  }
   private connectToGroup(){
     this.hubConnection?.on(`UsersStatus`, (data) => {
       console.log(data)
     })
     this.hubConnection?.invoke('ConnectToGroup').then(x=>console.log(`connect to groups`));
   }
-
-
-
 
   public getUsersStatus(userNames:string[]){
     this.hubConnection?.invoke<any>("GetUsersStatus", userNames).then()
@@ -79,6 +84,9 @@ export class SignalRService {
   }
   addUserToChat(chatName:string, userName:string){
     return  this.hubConnection?.invoke(`AddUser`, chatName, userName).then()
+  }
+  joinUserToChat(chatName:string){
+    return  this.hubConnection?.invoke(`JoinUser`, chatName).then()
   }
   editChat(chatName:string, newChatName:string){
     const body={

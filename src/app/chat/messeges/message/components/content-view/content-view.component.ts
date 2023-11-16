@@ -13,9 +13,7 @@ import {Message} from "../../../DTOs/Message";
 export class ContentViewComponent implements OnInit{
   @Input() content?:Content[];
   @Input() currentContent?:Content;
-
   @Output() CloseViewEvent = new EventEmitter<any>()
-
 
   private currentIndex:number=0;
   protected hasPrevious=false;
@@ -29,7 +27,7 @@ export class ContentViewComponent implements OnInit{
     this.SetIndex();
     this.LoadFile();
   }
-  SetIndex(){
+  protected SetIndex(){
     // @ts-ignore
     this.currentIndex=this.content?.indexOf(this.currentContent);
     if(this.currentIndex>=0&&this.content?.length){
@@ -37,19 +35,19 @@ export class ContentViewComponent implements OnInit{
         this.hasNext=this.currentIndex<this.content?.length-1;
     }
   }
-  GoToPrevious(){
+  protected GoToPrevious(){
     this.currentIndex-=1;
     this.currentContent=this.content?.at(this.currentIndex);
     this.SetIndex();
     this.LoadFile();
   }
-  GoToNext(){
+  protected GoToNext(){
     this.currentIndex+=1;
     this.currentContent=this.content?.at(this.currentIndex);
     this.SetIndex();
     this.LoadFile();
   }
-  LoadFile(){
+  private LoadFile(){
     console.log(this.blobs);
     if(this.blobs[this.currentIndex]){
       let objectURL = URL.createObjectURL(this.blobs[this.currentIndex]);

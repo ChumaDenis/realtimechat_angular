@@ -4,7 +4,7 @@
             <div class="user-profile-header">
                 <h3 >User Profile</h3>
                 <div>
-                    <button class="btn" (click)="this.isDisplayContextMenu = !this.isDisplayContextMenu;">
+                    <button *ngIf="isOwner" class="btn" (click)="this.isDisplayContextMenu = !this.isDisplayContextMenu;">
                         <mat-icon>more_vert</mat-icon>
                     </button>
                     <app-context-menu
@@ -23,7 +23,7 @@
                 <div class="user-avatar-container">
                     <img class="user-avatar" [src]="this.avatar">
                     <div>
-                        <button class="btn input-file"  onclick="document.getElementById('getFile').click()">
+                        <button *ngIf="isOwner" class="btn input-file"  onclick="document.getElementById('getFile').click()">
                             <mat-icon>attach_file</mat-icon>
                         </button>
                         <input type='file' multiple id="getFile" (change)="detectFiles($event)" style="display:none">
@@ -42,7 +42,7 @@
                 <input type="text" [(ngModel)]="this.userEdit.phoneNumber">
             </div>
         </div>
-        <div>
+        <div *ngIf="isOwner">
             <button class="btn user-btn user-logout-btn" (click)="this.Logout()" *ngIf="!isEditMode">
                 <mat-icon>exit_to_app</mat-icon>
                 <p>Log out</p>

@@ -44,3 +44,17 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+.unread-messages{
+    background-color: #9c9c9c;
+    position: absolute;
+    width: 30px;
+    border-radius: 20px;
+    right: 20px;
+    top: 35px;
+    border: solid black 1px;
+    *{
+
+        text-align: center;
+        margin: auto;
+    }
+}

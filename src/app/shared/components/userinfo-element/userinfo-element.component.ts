@@ -4,7 +4,7 @@ import {first, Observable, Observer} from "rxjs";
 import {User} from "../../Dtos/Auth/User";
 import {AvatarService} from "../../avatar.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
-import {SignalRService} from "../../../chat-menu/signal-r.service";
+import {SignalRService} from "../../../chat-menu/services/signal-r.service";
 
 @Component({
   selector: 'app-userinfo-element',
@@ -14,16 +14,37 @@ import {SignalRService} from "../../../chat-menu/signal-r.service";
 export class UserinfoElementComponent implements OnInit{
   @Input() userProfile?:User;
   protected isOpenUserProfile:boolean=false;
-  constructor(private authService:AuthService,private avatarService:AvatarService,private sanitaizer:DomSanitizer,
+  constructor(private avatarService:AvatarService,private sanitaizer:DomSanitizer,
               private signalRService:SignalRService) {
   }
 
   ngOnInit(): void {
+    this.formatStatus();
     if(this.userProfile?.avatar)
       this.downloadAvatar();
   }
   protected avatar?:SafeUrl;
+  protected statusName="";
+  formatStatus(){
 
+      switch (this.userProfile?.status){
+        case 0:
+          this.statusName="Online";
+          break;
+        case 1:
+          this.statusName="Offline";
+          break;
+        case 2:
+          this.statusName="Idle";
+          break;
+        case 3:
+          this.statusName="DoNotDisturb";
+          break;
+        case 4:
+          this.statusName="Invisible";
+          break;
+      }
+  }
   downloadAvatar(){
     const avatarJson=JSON.parse(localStorage.getItem("userAvatar")||"");
     console.log(avatarJson);
@@ -52,8 +73,4 @@ export class UserinfoElementComponent implements OnInit{
       })
     }
   }
-
-
-
-
 }

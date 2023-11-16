@@ -22,3 +22,33 @@
   justify-content: space-between;
   margin-top: 10%;
 }
+.chat-info-header{
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.user-btn{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  border: solid #9c9c9c 2px;
+  border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
+  p{
+    padding:0;
+    height: 10px;
+  }
+}
+.new-chat-buttons{
+  display: flex;
+  justify-content: space-around;
+  >*{
+    border-radius: 20px;
+    min-width: 50px;
+    padding: 5px 10px;
+    background-color: #e3e3e3;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
+  }
+}

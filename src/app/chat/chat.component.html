@@ -1,6 +1,6 @@
 <div class="chat-container">
     <app-chatinfo-element [ChatInfo]="this.ChatInfo"></app-chatinfo-element>
-    <div class="DivWithScroll" #scroll>
+    <div class="DivWithScroll" #scroll (scroll)="OnScroll()">
         <app-message *ngFor="let m of this.Messages;" [message]="m" (MessageReplyEvent)="onMessageReply($event)" (MessageChangeEvent)="onMessageChange($event)">
             {{this.IsScrolled ? ScrollToBottom() : ''}}
         </app-message>
@@ -44,15 +44,24 @@
         <div class="input-file-container">
             <app-selected-files *ngFor="let file of this.fileList" [file]="file.name" (DeleteFileEvent)="DeleteFile($event)"></app-selected-files>
         </div>
-        <form class="message-form" [formGroup]="sendMessageForm" >
-            <input class="chat-input" multiple id="textContent" type="text" formControlName="TextContent">
+        <form class="message-form" [formGroup]="sendMessageForm" *ngIf="ChatInfo&& (ChatInfo.isChat||ChatInfo.isOwner)">
+            <input class="chat-input" multiple (keyup.enter)="sendMessage()" id="textContent" type="text" formControlName="TextContent">
             <div>
                 <button class="btn input-file"  onclick="document.getElementById('getFile').click()">
                     <mat-icon>attach_file</mat-icon>
                 </button>
                 <input type='file' multiple id="getFile" (change)="detectFiles($event)" style="display:none">
             </div>
+            <div>
+                <input style="margin-top: 8px" formControlName="SendTime" type="datetime-local">
+            </div>
+
             <button class="btn send-button" type="submit" (click)="sendMessage()"><mat-icon>send</mat-icon></button>
         </form>
+        <div class="join-chat">
+            <button class="btn join-chat-button" *ngIf="ChatInfo&&!ChatInfo.isSubscribe" (click)="JoinChat()">Join Channel</button>
+        </div>
+
     </div>
+
 </div>

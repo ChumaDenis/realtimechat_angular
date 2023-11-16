@@ -1,13 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ChatService} from "./chat.service";
+import {ChatService} from "./services/chat.service";
 import {ChatElement} from "../chat/DTOs/ChatElement";
-import {SignalRService} from "./signal-r.service";
+import {SignalRService} from "./services/signal-r.service";
 import {first, Subject, takeUntil} from "rxjs";
 import {Message} from "../chat/messeges/DTOs/Message";
 import {User} from "../shared/Dtos/Auth/User";
 import {AuthService} from "../shared/auth.service";
 import {AvatarService} from "../shared/avatar.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {UnreadMessages} from "../chat/DTOs/UnreadMessages";
 
 
 @Component({
@@ -18,71 +19,66 @@ import {ActivatedRoute, Router} from "@angular/router";
 export class ChatMenuComponent implements OnInit, OnDestroy{
     protected User?:User;
     public chats:ChatElement[]=[];
-    public selectChats:ChatElement[]=[];
-    private subject=new Subject<void>();
+    public selectedChats:ChatElement[]=[];
+
     protected isNewChatFormOpen=false;
-  constructor(private service:ChatService, private signalR:SignalRService, private authService:AuthService,
-              private avatarService:AvatarService, private router:Router, private activatedRouter:ActivatedRoute) {
+    private subject=new Subject<void>();
+  constructor(private service:ChatService,
+              private signalR:SignalRService,
+              private authService:AuthService,
+              private avatarService:AvatarService,
+              private router:Router,
+              private activatedRouter:ActivatedRoute) {
       this.getChats()
   }
-    getChats(){
-        this.service.getChats().pipe(first()).subscribe(data=>{
-            this.FormatLastMessage(data as ChatElement[])
 
-            this.selectChats=this.chats;
-            console.log(this.chats)
-        });
-    }
-    GetAllChats(){
-      this.selectChats=this.chats;
-    }
-    GetChats(){
-        this.selectChats=this.chats.filter(x=>x.isChat==true);
-    }
-    GetChannels(){
-      this.selectChats=this.chats.filter(x=>x.isChat==false);
-    }
 
-    ngOnDestroy(): void {
-        this.subject.next();
-        this.subject.complete()
+  ngOnInit(): void {
+      this.SetSignalRListeners();
+  }
+  ngOnDestroy(): void {
+      this.subject.next();
+      this.subject.complete()
+  }
+
+
+
+    protected selectAllChats(){
+        this.selectedChats=this.chats;
     }
-
-    private FormatLastMessage(chats:ChatElement[]){
-      this.chats=[];
-      chats.map(x =>{
-          if(x.lastMessage){
-
-              if(x.lastMessage?.textContent==""&&x.lastMessage.contentFiles){
-                  // @ts-ignore
-                  if(x.lastMessage.contentFiles.length>1)
-                    x.lastMessage.textContent="files";
-                  else if(x.lastMessage.contentFiles[0].eContentType==1){
-                    x.lastMessage.textContent="image";
-                  }
-                  else if(x.lastMessage.contentFiles[0].eContentType==2){
-                      x.lastMessage.textContent="video";
-                  }
-                  else{
-                      x.lastMessage.textContent="file";
-                  }
-              }
-          }
-          else{
-              const message=new Message();
-              message.textContent="Chat was created!";
-              message.sendTime=x.createdDate;
-          }
-          this.chats.push(x)
-      })
+    protected selectChats(){
+        this.selectedChats=this.chats.filter(x=>x.isChat==true);
+    }
+    protected selectChannels(){
+        this.selectedChats=this.chats.filter(x=>x.isChat==false);
     }
 
-    ngOnInit(): void {
+    protected GetPublicChannels(){
+        this.service.getPublicChat().pipe(first()).subscribe(x=>{
+            this.selectedChats=this.FormatLastMessage(x);
+        })
+    }
+    private SetSignalRListeners(){
         this.signalR.connect();
         this.signalR.addListenerForChats().pipe(takeUntil(this.subject)).subscribe(x=>{
             this.chats.map(y=>{
                 if(y.name==x.chatName){
                     y.lastMessage=x;
+                    if(this.router.parseUrl(this.router.url).root.children.primary){
+                        const chatName=this.router.parseUrl(this.router.url).root.children.primary.segments[0].path;
+                        if( chatName!=y.name){
+                            // @ts-ignore
+                            y.unreadMessages.unreadMessage+=1;
+                            console.log("_____________________")
+                        }
+
+                    }
+                    else{
+                        // @ts-ignore
+                        y.unreadMessages.unreadMessage+=1;
+                    }
+
+
                 }
             })
             this.SortChats();
@@ -112,8 +108,17 @@ export class ChatMenuComponent implements OnInit, OnDestroy{
             })
             this.getChats();
         })
+
     }
-    downloadAvatar(){
+    private getChats(){
+        this.service.getChats().pipe(first()).subscribe(data=>{
+            this.chats= this.FormatLastMessage(data as ChatElement[])
+
+            this.selectedChats=this.chats;
+            console.log(this.chats)
+        });
+    }
+    private downloadAvatar(){
         const avatarJson=JSON.parse(localStorage.getItem("userAvatar")||"");
         console.log(avatarJson);
         if(avatarJson || avatarJson.id!=this.User?.avatar?.id){
@@ -130,12 +135,40 @@ export class ChatMenuComponent implements OnInit, OnDestroy{
         }
 
     }
-
     private SortChats() {
         this.chats= this.chats.sort((a, b) => {
             // @ts-ignore
             return <any>new Date(b.lastMessage?.sendTime) - <any>new Date(a.lastMessage?.sendTime);
         });
+    }
+    private FormatLastMessage(chats:ChatElement[]){
+        let chatsList:ChatElement[]=[];
+        chats.map(x =>{
+            console.log(x);
+            if(x.lastMessage){
+                if(!x.lastMessage.textContent&&x.lastMessage.contentFiles){
+                    // @ts-ignore
+                    if(x.lastMessage.contentFiles.length>1)
+                        x.lastMessage.textContent="files";
+                    else if(x.lastMessage.contentFiles[0].eContentType==1){
+                        x.lastMessage.textContent="image";
+                    }
+                    else if(x.lastMessage.contentFiles[0].eContentType==2){
+                        x.lastMessage.textContent="video";
+                    }
+                    else{
+                        x.lastMessage.textContent="file";
+                    }
+                }
+            }
+            else{
+                const message=new Message();
+                message.textContent="Chat was created!";
+                message.sendTime=x.createdDate;
+            }
+            chatsList.push(x)
+        })
+        return chatsList;
     }
 
 }

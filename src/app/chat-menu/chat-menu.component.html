@@ -1,14 +1,14 @@
 <div class="chats">
     <input class="chat-input" placeholder="Find chat...">
     <div class="chats-body">
-        <div>
-            <button (click)="GetAllChats()">all</button>
-            <button (click)="GetChats()">chats</button>
-            <button (click)="GetChannels()">channels</button>
-            <button >public</button>
+        <div class="chat-buttons">
+            <button  (click)="selectAllChats()">all</button>
+            <button (click)="selectChats()">chats</button>
+            <button (click)="selectChannels()">channels</button>
+            <button (click)="GetPublicChannels()">public</button>
         </div>
         <div class="div-with-scroll chats-container">
-            <app-chat-element *ngFor="let i of this.selectChats" [chat]="i"></app-chat-element>
+            <app-chat-element *ngFor="let i of this.selectedChats" [chat]="i"></app-chat-element>
             <button class="btn" (click)="isNewChatFormOpen=true">Create new chat!</button>
         </div>
         <div class="user-container">
