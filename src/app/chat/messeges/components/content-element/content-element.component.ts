@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Content} from "../../../DTOs/Content";
-import {Message} from "../../../DTOs/Message";
+import {Content} from "../../DTOs/Content";
 
 @Component({
   selector: 'app-content-element',

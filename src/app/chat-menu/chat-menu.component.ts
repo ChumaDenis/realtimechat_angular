@@ -8,7 +8,6 @@ import {User} from "../shared/Dtos/Auth/User";
 import {AuthService} from "../shared/auth.service";
 import {AvatarService} from "../shared/avatar.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {UnreadMessages} from "../chat/DTOs/UnreadMessages";
 
 
 @Component({
@@ -23,25 +22,23 @@ export class ChatMenuComponent implements OnInit, OnDestroy{
 
     protected isNewChatFormOpen=false;
     private subject=new Subject<void>();
-  constructor(private service:ChatService,
-              private signalR:SignalRService,
-              private authService:AuthService,
-              private avatarService:AvatarService,
-              private router:Router,
-              private activatedRouter:ActivatedRoute) {
-      this.getChats()
-  }
+    constructor(private service:ChatService,
+                private signalR:SignalRService,
+                private authService:AuthService,
+                private avatarService:AvatarService,
+                private router:Router,
+                private activatedRouter:ActivatedRoute) {
+        this.getChats()
+    }
 
 
-  ngOnInit(): void {
+    ngOnInit(): void {
       this.SetSignalRListeners();
-  }
-  ngOnDestroy(): void {
+    }
+    ngOnDestroy(): void {
       this.subject.next();
       this.subject.complete()
-  }
-
-
+    }
 
     protected selectAllChats(){
         this.selectedChats=this.chats;
@@ -69,24 +66,16 @@ export class ChatMenuComponent implements OnInit, OnDestroy{
                         if( chatName!=y.name){
                             // @ts-ignore
                             y.unreadMessages.unreadMessage+=1;
-                            console.log("_____________________")
                         }
-
                     }
                     else{
                         // @ts-ignore
                         y.unreadMessages.unreadMessage+=1;
                     }
-
-
                 }
             })
             this.SortChats();
         });
-        this.authService.getUserProfile().pipe(first()).subscribe(x=> {
-            this.User = x
-            this.downloadAvatar();
-        })
 
         this.signalR.AddChatListener().pipe(takeUntil(this.subject)).subscribe(x=>{
             this.router.navigate([`/chats/${x}`]);
@@ -109,19 +98,29 @@ export class ChatMenuComponent implements OnInit, OnDestroy{
             this.getChats();
         })
 
+        this.authService.getUserProfile().pipe(first()).subscribe(x=> {
+
+            this.downloadAvatar();
+            this.signalR.getUserStatus().pipe(takeUntil(this.subject)).subscribe(y=>{
+                this.User = x;
+                if(this.User?.status){
+                    this.User.status=y;
+                }
+            });
+        })
     }
+
     private getChats(){
         this.service.getChats().pipe(first()).subscribe(data=>{
-            this.chats= this.FormatLastMessage(data as ChatElement[])
-
+            this.chats= this.FormatLastMessage(data as ChatElement[]);
             this.selectedChats=this.chats;
-            console.log(this.chats)
         });
     }
     private downloadAvatar(){
-        const avatarJson=JSON.parse(localStorage.getItem("userAvatar")||"");
-        console.log(avatarJson);
-        if(avatarJson || avatarJson.id!=this.User?.avatar?.id){
+        const avatar=localStorage.getItem("userAvatar");
+        let avatarJson:any="";
+        if(avatar) avatarJson = JSON.parse(avatar);
+        if((avatarJson!="" && avatarJson.id!=this.User?.avatar?.id)||avatarJson==""){
             this.avatarService.getAvatar(this.User?.userName||"").pipe().subscribe(file=>{
                 let x=this.avatarService.convertBlobToBase64(file);
                 x.subscribe((y:any)=>{
@@ -133,7 +132,6 @@ export class ChatMenuComponent implements OnInit, OnDestroy{
                 })
             })
         }
-
     }
     private SortChats() {
         this.chats= this.chats.sort((a, b) => {
@@ -144,7 +142,6 @@ export class ChatMenuComponent implements OnInit, OnDestroy{
     private FormatLastMessage(chats:ChatElement[]){
         let chatsList:ChatElement[]=[];
         chats.map(x =>{
-            console.log(x);
             if(x.lastMessage){
                 if(!x.lastMessage.textContent&&x.lastMessage.contentFiles){
                     // @ts-ignore
@@ -170,5 +167,4 @@ export class ChatMenuComponent implements OnInit, OnDestroy{
         })
         return chatsList;
     }
-
 }

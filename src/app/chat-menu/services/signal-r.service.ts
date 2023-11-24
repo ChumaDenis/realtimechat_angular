@@ -25,13 +25,7 @@ export class SignalRService {
     })
     return subject;
   }
-  public addListenerForUnreadMessages() {
-    const subject=new Subject<Message>()
-    this.hubConnection?.on(`UnreadMessages`, (data: UnreadMessages) => {
-      subject.next(data);
-    })
-    return subject;
-  }
+
   private connectToGroup(){
     this.hubConnection?.on(`UsersStatus`, (data) => {
       console.log(data)
@@ -49,7 +43,13 @@ export class SignalRService {
     })
     return subject;
   }
-
+  public getUserStatus(){
+    const subject=new Subject<number>();
+    this.hubConnection?.on("UserStatus",x=>{
+      subject.next(x);
+    })
+    return subject;
+  }
 
   public AddChatListener(){
     const subject=new Subject<string>()
@@ -83,7 +83,7 @@ export class SignalRService {
     return  this.hubConnection?.invoke(`CreateChat`, body).then()
   }
   addUserToChat(chatName:string, userName:string){
-    return  this.hubConnection?.invoke(`AddUser`, chatName, userName).then()
+    return  this.hubConnection?.invoke(`AddUser`, chatName, userName)
   }
   joinUserToChat(chatName:string){
     return  this.hubConnection?.invoke(`JoinUser`, chatName).then()

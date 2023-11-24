@@ -1,5 +1,5 @@
-<div class="chatinfo-container">
-    <div class="chatinfo">
+<div class="chatinfo-page">
+    <div class="chatinfo-container">
         <div class="chatinfo-header">
             <h3>{{chatInfo?.isChat?"Chat Info":"Channel Info"}}</h3>
             <div style="display: flex;position: relative;">
@@ -25,14 +25,14 @@
             <hr>
             <h6>Users:</h6>
             <div class="chatinfo-users"  *ngIf="this.chatInfo">
-                <app-userinfo-element class="chatinfo-user" *ngFor="let user of this.chatInfo?.userViewModels" [userProfile]="user">
+                <app-userinfo-element class="chatinfo-user" *ngFor="let user of users" [userProfile]="user">
                 </app-userinfo-element>
 
             </div>
         </div>
         <div *ngIf="isOpenEditMode && this.chatInfo">
             <input type="text" [(ngModel)]="editName">
-            <button class="btn" (click)="this.EditChat()">
+            <button class="btn" (click)="this.editChat()">
                 <mat-icon>edit</mat-icon>
                 Edit
             </button>
@@ -43,7 +43,7 @@
                 <mat-icon>search</mat-icon>
             </button>
             <app-userinfo-element *ngIf="addUserModel" [userProfile]="addUserModel"></app-userinfo-element>
-            <button [disabled]="!addUserModel" class="btn" (click)="this.AddUser()">
+            <button [disabled]="!addUserModel" class="btn" (click)="this.addUser()">
                 <mat-icon>add</mat-icon>
                 AddUser
             </button>

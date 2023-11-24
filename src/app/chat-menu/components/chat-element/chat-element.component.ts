@@ -1,9 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ChatElement} from "../../../chat/DTOs/ChatElement";
-import {ChatService} from "../../services/chat.service";
-import {DatePipe} from "@angular/common";
 import {Router} from "@angular/router";
-import {SignalRService} from "../../services/signal-r.service";
 
 @Component({
   selector: 'app-chat-element',

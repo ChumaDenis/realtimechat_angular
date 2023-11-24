@@ -4,7 +4,6 @@ import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {AuthService} from "../../shared/auth.service";
 import {Subject} from "rxjs";
-import {UserStatus} from "../../shared/Dtos/Auth/UserStatus";
 import {Message} from "../messeges/DTOs/Message";
 
 @Injectable({

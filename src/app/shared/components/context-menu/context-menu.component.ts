@@ -15,9 +15,6 @@ export class ContextMenuComponent {
   @Output() onContextMenuItemClick: EventEmitter<any> = new EventEmitter<any>();
   protected onContextMenuClick(event:Event, data?:ContextMenuModel): any {
     if(data)
-      this.onContextMenuItemClick.emit({
-        event,
-        data,
-      });
+      this.onContextMenuItemClick.emit({event, data});
   }
 }

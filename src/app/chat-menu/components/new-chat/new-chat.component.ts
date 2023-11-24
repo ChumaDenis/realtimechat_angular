@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {ChatService} from "../../services/chat.service";
 import {SignalRService} from "../../services/signal-r.service";
 

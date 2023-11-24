@@ -1,6 +1,5 @@
 import {Component, Input} from '@angular/core';
 import {SafeUrl} from "@angular/platform-browser";
-import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-video',

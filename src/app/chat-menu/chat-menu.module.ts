@@ -6,6 +6,7 @@ import {AuthModule} from "../auth/auth.module";
 import {NewChatComponent} from "./components/new-chat/new-chat.component";
 import {MatIconModule} from "@angular/material/icon";
 import {FormsModule} from "@angular/forms";
+import {ChatsRoutingModule} from "./chats-routing.module";
 
 
 
@@ -19,10 +20,12 @@ import {FormsModule} from "@angular/forms";
     CommonModule,
     AuthModule,
     MatIconModule,
-    FormsModule
+    FormsModule,
+    ChatsRoutingModule
   ],
   exports:[
-    ChatMenuComponent
+    ChatMenuComponent,
+    ChatsRoutingModule
   ]
 })
 export class ChatMenuModule { }

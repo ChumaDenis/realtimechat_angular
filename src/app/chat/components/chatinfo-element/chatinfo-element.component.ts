@@ -1,5 +1,4 @@
 import {Component, HostListener, Input, OnInit} from '@angular/core';
-import {AuthService} from "../../../shared/auth.service";
 import {Chat} from "../../DTOs/Chat";
 import {ChatService} from "../../../chat-menu/services/chat.service";
 import {SignalRService} from "../../../chat-menu/services/signal-r.service";

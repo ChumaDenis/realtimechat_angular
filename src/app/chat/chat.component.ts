@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Message} from "./messeges/DTOs/Message";
 import {Chat} from "./DTOs/Chat";
 import {ChatService} from "../chat-menu/services/chat.service";
@@ -6,7 +6,6 @@ import {MessageService} from "./services/message.service";
 import {ActivatedRoute} from "@angular/router";
 import {FormGroup, FormBuilder} from "@angular/forms";
 import {first, Subject, takeUntil} from "rxjs";
-import {SignalRService} from "../chat-menu/services/signal-r.service";
 import {MessageSignalrService} from "./services/message-signalr.service";
 import {PagedList} from "../shared/Dtos/PagedList";
 @Component({
@@ -31,8 +30,6 @@ export class ChatComponent implements OnInit, OnDestroy{
   protected UpdateMessage?:Message;
   protected replyMessage?: Message;
   private subject=new Subject<void>();
-
-
   constructor(
       public fb: FormBuilder,
       private chatService:ChatService,
@@ -59,7 +56,6 @@ export class ChatComponent implements OnInit, OnDestroy{
 
 
   ngOnInit(): void {
-      console.log(this.ChatInfo?.name);
       this.sendMessageForm = this.fb.group({
           TextContent: [''],
           SendTime:undefined
@@ -106,21 +102,21 @@ export class ChatComponent implements OnInit, OnDestroy{
               this.Messages= this.Messages?.filter(m=>m.id!=data);
           })
 
-      this.signalR.reloadChatListener().pipe(takeUntil(this.subject)).subscribe(chatName=>{
-          if(chatName==this.ChatInfo?.name){
-              this.LoadChatInfo(chatName);
-          }
-
+      this.signalR.reloadChatListener()
+          .pipe(takeUntil(this.subject)).subscribe(chatName=>{
+            if(chatName==this.ChatInfo?.name){
+                this.LoadChatInfo(chatName);
+            }
       })
   }
 
-  protected ScrollToBottom(){
+  protected scrollToBottom(){
       console.log(this.scroll.nativeElement.scrollTop);
       this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight;
       this.IsScrolled=false;
   }
 
-  protected OnScroll(){
+  protected onScroll(){
       if(-this.scroll.nativeElement.scrollTop+this.scroll.nativeElement.offsetHeight+50>=this.scroll.nativeElement.scrollHeight
           &&this.hasNextPages){
           this.messageService.getMessages(this.ChatInfo?.name||"").pipe(first()).subscribe((x:PagedList<Message>)=>{
@@ -173,7 +169,6 @@ export class ChatComponent implements OnInit, OnDestroy{
       this.fileList=this.fileList.filter(x=>x.name!=fileName);
   }
 
-
   protected sendMessage(){
       if(this.sendMessageForm.get("TextContent")?.value!=""||this.fileList.length!=0){
           // @ts-ignore
@@ -194,22 +189,20 @@ export class ChatComponent implements OnInit, OnDestroy{
               formData.append("ReplyMessageId", this.replyMessage?.id);
           }
 
-          if(this.isUpdateMessage)
-          {
+          if(this.isUpdateMessage) {
               formData.append('Id', this.UpdateMessage?.id);
               this.messageService.updateMessage(formData).pipe(first()).subscribe(x=>{
                   this.clearForm();
-                  this.ScrollToBottom();
+                  this.scrollToBottom();
               });
           }
           else{
               this.messageService.sendMessage(formData).pipe(first()).subscribe(x=>{
                   this.clearForm();
-                  this.ScrollToBottom();
+                  this.scrollToBottom();
               });
           }
       }
-
   }
   protected clearForm(){
       this.UpdateMessage=undefined;
@@ -229,9 +222,7 @@ export class ChatComponent implements OnInit, OnDestroy{
       date = date.replace('T','-');
       var parts = date.split('-');
       var timeParts = parts[3].split(':');
-
       // @ts-ignore
       return new Date(parts[0], parts[1]-1, parts[2], timeParts[0], timeParts[1]);
-
   }
 }

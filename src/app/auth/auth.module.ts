@@ -7,13 +7,14 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SharedModule} from "../shared/shared.module";
 import {MatIconModule} from "@angular/material/icon";
 import {UserinfoElementComponent} from "./userinfo-element/userinfo-element.component";
-
+import {RouterLink, RouterModule, Routes} from "@angular/router";
+import {AuthRoutingModule} from "./auth-routing.module";
+import {SigninModule} from "./signin/signin.module";
 
 
 @NgModule({
   declarations: [
     UserProfileComponent,
-    SigninComponent,
     SignupComponent,
     UserinfoElementComponent
   ],
@@ -22,14 +23,19 @@ import {UserinfoElementComponent} from "./userinfo-element/userinfo-element.comp
     SharedModule,
     ReactiveFormsModule,
     MatIconModule,
-    FormsModule
-
+    FormsModule,
+    RouterLink,
+    AuthRoutingModule,
+    SigninModule
   ],
   exports:[
     UserProfileComponent,
-    SigninComponent,
-    SignupComponent,
-    UserinfoElementComponent
+    UserinfoElementComponent,
+    RouterModule,
+    AuthRoutingModule
+  ],
+  providers:[
+
   ]
 })
 export class AuthModule { }

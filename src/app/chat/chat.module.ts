@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {ChatInfoComponent} from "./components/chatinfo/chat-info.component";
 import {SelectChatsComponent} from "./components/select-chats/select-chats.component";
-import {MessageComponent} from "./messeges/message/message.component";
-import {VideoComponent} from "./messeges/message/components/video/video.component";
-import {SelectedFilesComponent} from "./messeges/message/components/selected-files/selected-files.component";
-import {ContentViewComponent} from "./messeges/message/components/content-view/content-view.component";
-import {ContentElementComponent} from "./messeges/message/components/content-element/content-element.component";
+import {MessageComponent} from "./messeges/message.component";
+import {VideoComponent} from "./messeges/components/video/video.component";
+import {SelectedFilesComponent} from "./messeges/components/selected-files/selected-files.component";
+import {ContentViewComponent} from "./messeges/components/content-view/content-view.component";
+import {ContentElementComponent} from "./messeges/components/content-element/content-element.component";
 import {SharedModule} from "../shared/shared.module";
 import {MatIconModule} from "@angular/material/icon";
 import {AuthModule} from "../auth/auth.module";
@@ -19,6 +19,7 @@ import {VgBufferingModule} from "@videogular/ngx-videogular/buffering";
 import {VgOverlayPlayModule} from "@videogular/ngx-videogular/overlay-play";
 import {MessagesModule} from "./messeges/messages.module";
 import {BrowserModule} from "@angular/platform-browser";
+import {ChatRoutingModule} from "./chat-routing.module";
 
 @NgModule({
   declarations: [
@@ -27,7 +28,6 @@ import {BrowserModule} from "@angular/platform-browser";
     ChatinfoElementComponent
   ],
   exports: [
-
   ],
   imports: [
     CommonModule,
@@ -36,7 +36,7 @@ import {BrowserModule} from "@angular/platform-browser";
     AuthModule,
     FormsModule,
     ReactiveFormsModule,
-    MessagesModule
+    MessagesModule,
   ]
 })
 export class ChatModule { }

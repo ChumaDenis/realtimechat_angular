@@ -1,9 +1,8 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {Content} from "../../../DTOs/Content";
-import {MessageService} from "../../../../services/message.service";
+import {Content} from "../../DTOs/Content";
+import {MessageService} from "../../../services/message.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {first} from "rxjs";
-import {Message} from "../../../DTOs/Message";
 
 @Component({
   selector: 'app-content-view',

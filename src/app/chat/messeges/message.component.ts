@@ -1,9 +1,9 @@
 import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
-import {Message} from "../DTOs/Message";
-import {MessageService} from "../../services/message.service";
-import {Content} from "../DTOs/Content";
+import {Message} from "./DTOs/Message";
+import {MessageService} from "../services/message.service";
+import {Content} from "./DTOs/Content";
 import {first} from "rxjs";
-import {ContextMenuModel} from "../../../shared/components/context-menu/context-menu.component";
+import {ContextMenuModel} from "../../shared/components/context-menu/context-menu.component";
 
 @Component({
   selector: 'app-message',
@@ -60,7 +60,6 @@ export class MessageComponent implements OnInit{
   }
 
   private FormatMessage(message:Message){
-
     if(message&&message){
       if(message?.textContent==null&&message.contentFiles){
         let text="";
@@ -80,8 +79,6 @@ export class MessageComponent implements OnInit{
         this.message.messageReply.textContent=text;
       }
     }
-
-
   }
 
   protected isDisplayContextMenu?: boolean;
@@ -169,6 +166,10 @@ export class MessageComponent implements OnInit{
         break;
       case this.menuItems[3].menuEvent:
         this.DeleteMessage();
+        break;
+      default:
+        this.isDisplayContextMenu=false;
+        break
     }
   }
 

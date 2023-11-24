@@ -1,10 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Chat} from "../../DTOs/Chat";
 import {SignalRService} from "../../../chat-menu/services/signal-r.service";
-import {first, from, Observable} from "rxjs";
-import {fromPromise} from "rxjs/internal/observable/innerFrom";
+import {first} from "rxjs";
 import {UntilDestroy, untilDestroyed} from "@ngneat/until-destroy";
-import {ChatService} from "../../../chat-menu/services/chat.service";
 import {AuthService} from "../../../shared/auth.service";
 import {User} from "../../../shared/Dtos/Auth/User";
 @UntilDestroy()
@@ -16,6 +14,7 @@ import {User} from "../../../shared/Dtos/Auth/User";
 export class ChatInfoComponent implements OnInit{
   @Input() chatInfo?:Chat;
   @Output() CloseChatInfo= new EventEmitter<void>();
+  protected users:User[]=[];
   protected isOpenEditMode=false;
   protected isOpenAddUserMode=false;
   protected addUserName:string="";
@@ -24,7 +23,6 @@ export class ChatInfoComponent implements OnInit{
   protected isDisplayContextMenu?: boolean;
 
   constructor(protected signalRService:SignalRService,
-              private chatService:ChatService,
               private authService:AuthService) {
 
   }
@@ -36,16 +34,17 @@ export class ChatInfoComponent implements OnInit{
   private SetSignalRListeners(){
       this.signalRService.getUsersStatus(this.chatInfo?.userViewModels?.map(x=>x.userName||"")||[])
           .pipe(untilDestroyed(this)).subscribe(x=>{
-          x.forEach(userStatus=>{
-              let user= this.chatInfo?.userViewModels?.find(user=>userStatus.userName==user.userName);
-              if(user){
-                  user.status=userStatus.activityStatus;
-              }
-          })
-
-      });
+              let users:User[]=this.chatInfo?.userViewModels||[];
+              x.forEach(userStatus=>{
+                  let user= users.find(user=>userStatus.userName==user.userName);
+                  if(user){
+                    user.status=userStatus.activityStatus;
+                  }
+              })
+              this.users=users;
+          });
   }
-  protected AddUser(){
+  protected addUser(){
       this.signalRService.addUserToChat(this.chatInfo?.name||"", this.addUserModel?.userName||"")?.then(
           x=>{
               this.addUserModel=undefined;
@@ -53,7 +52,7 @@ export class ChatInfoComponent implements OnInit{
               this.isOpenAddUserMode=false;
           });
   }
-  protected EditChat(){
+  protected editChat(){
       this.signalRService.editChat(this.chatInfo?.name||"", this.editName)?.then(
           x=>{
               this.isOpenEditMode=false;
@@ -98,53 +97,48 @@ export class ChatInfoComponent implements OnInit{
 
   }
 
-
-    private ClickMenuItems = [
-        {
-            menuText: 'Add user',
-            menuEvent: 'Handle add',
-        },
-        {
-            menuText: 'Edit chat',
-            menuEvent: 'Handle edit',
-        },
-        {
-            menuText: 'Leave chat',
-            menuEvent: 'Handle leave',
-        },
-        {
-            menuText: 'Delete chat',
-            menuEvent: 'Handle delete'
-        }
-    ];
-    public clickMenuItems:{menuText:string, menuEvent:string}[] = [];
-    protected handleMenuItemClick(event:Event) {
-        // @ts-ignore
-        switch (event.data.menuEvent) {
-            case this.ClickMenuItems[0].menuEvent:
-                console.log("Add user");
-                this.isOpenAddUserMode=true;
-                this.isDisplayContextMenu=false;
-                break;
-            case this.ClickMenuItems[1].menuEvent:
-                console.log("Edit");
-                this.isOpenEditMode=true;
-                this.editName=this.chatInfo?.name||"";
-                this.isDisplayContextMenu=false;
-                break;
-            case this.ClickMenuItems[2].menuEvent:
-                console.log("leave");
-                this.signalRService.leaveChat(this.chatInfo?.name||"")?.then(
-                    x=>this.isDisplayContextMenu=false
-                );
-                break;
-            case this.ClickMenuItems[3].menuEvent:
-                console.log("delete");
-                this.signalRService.deleteChat(this.chatInfo?.name||"")?.then(x=>{
-                    this.isDisplayContextMenu=false
-                })
-
-                break;
+  private ClickMenuItems = [
+      {
+          menuText: 'Add user',
+          menuEvent: 'Handle add',
+      },
+      {
+          menuText: 'Edit chat',
+          menuEvent: 'Handle edit',
+      },
+      {
+          menuText: 'Leave chat',
+          menuEvent: 'Handle leave',
+      },
+      {
+          menuText: 'Delete chat',
+          menuEvent: 'Handle delete'
+      }
+  ];
+  public clickMenuItems:{menuText:string, menuEvent:string}[] = [];
+  protected handleMenuItemClick(event:Event) {
+      // @ts-ignore
+      switch (event.data.menuEvent) {
+          case this.ClickMenuItems[0].menuEvent:
+              this.isOpenAddUserMode=true;
+              break;
+          case this.ClickMenuItems[1].menuEvent:
+              this.isOpenEditMode=true;
+              this.editName=this.chatInfo?.name||"";
+              break;
+          case this.ClickMenuItems[2].menuEvent:
+              this.signalRService.leaveChat(this.chatInfo?.name||"")?.then(
+                  x=>this.isDisplayContextMenu=false
+              );
+              break;
+          case this.ClickMenuItems[3].menuEvent:
+              this.signalRService.deleteChat(this.chatInfo?.name||"")?.then(x=>{
+                  this.isDisplayContextMenu=false
+              })
+              break;
+          default:
+              this.isDisplayContextMenu=false;
+              break;
         }
     }
 }

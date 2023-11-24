@@ -1,10 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {AuthService} from "../../shared/auth.service";
-import {first, Observable, Observer} from "rxjs";
+import {first} from "rxjs";
 import {User} from "../../shared/Dtos/Auth/User";
 import {AvatarService} from "../../shared/avatar.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
-import {SignalRService} from "../../chat-menu/services/signal-r.service";
 
 @Component({
   selector: 'app-userinfo-element',
@@ -13,9 +11,11 @@ import {SignalRService} from "../../chat-menu/services/signal-r.service";
 })
 export class UserinfoElementComponent implements OnInit{
   @Input() userProfile?:User;
+  protected avatar?:SafeUrl;
+  protected statusName="";
   protected isOpenUserProfile:boolean=false;
-  constructor(private avatarService:AvatarService,private sanitaizer:DomSanitizer,
-              private signalRService:SignalRService) {
+  constructor(private avatarService:AvatarService,
+              private sanitaizer:DomSanitizer) {
   }
 
   ngOnInit(): void {
@@ -23,10 +23,8 @@ export class UserinfoElementComponent implements OnInit{
     if(this.userProfile?.avatar)
       this.downloadAvatar();
   }
-  protected avatar?:SafeUrl;
-  protected statusName="";
-  formatStatus(){
 
+  private formatStatus(){
       switch (this.userProfile?.status){
         case 0:
           this.statusName="Online";
@@ -45,16 +43,17 @@ export class UserinfoElementComponent implements OnInit{
           break;
       }
   }
-  downloadAvatar(){
-    const avatarJson=JSON.parse(localStorage.getItem("userAvatar")||"");
+  private downloadAvatar(){
+    const avatar=localStorage.getItem("userAvatar");
+    let avatarJson:any="";
+    if(avatar) avatarJson = JSON.parse(avatar);
     console.log(avatarJson);
-    if(!avatarJson && avatarJson.id==this.userProfile?.avatar?.id){
+    if(avatarJson!="" && avatarJson.id==this.userProfile?.avatar?.id){
       fetch(avatarJson.file).then(x=>{
         x.blob().then((avatar)=> {
           console.log(avatar);
           let objectURL = URL.createObjectURL(avatar);
           this.avatar= this.sanitaizer.bypassSecurityTrustUrl(objectURL);
-
         });
       })
     }
@@ -63,7 +62,7 @@ export class UserinfoElementComponent implements OnInit{
         let objectURL = URL.createObjectURL(file);
         this.avatar= this.sanitaizer.bypassSecurityTrustUrl(objectURL);
         let x=this.avatarService.convertBlobToBase64(file);
-        x.subscribe((y:any)=>{
+        x.pipe(first()).subscribe((y:any)=>{
           const avatarInfo={
             id:this.userProfile?.avatar?.id,
             file:`${y}`

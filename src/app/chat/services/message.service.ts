@@ -13,7 +13,7 @@ export class MessageService {
   }
   currentMessagePage:number=0;
   currentChat:string="";
-  getMessages(name:string ): Observable<any> {
+  public getMessages(name:string ): Observable<any> {
     this.headers.append('Content-Type', 'application/json')
     if(this.currentChat!=name){
       this.currentMessagePage=0;
@@ -23,25 +23,25 @@ export class MessageService {
     let api = `${this.endpoint}/Message/get?chatName=${name}&PageNumber=${this.currentMessagePage}&PageSize=10`;
     return this.http.get(api,{ headers: this.headers}).pipe(catchError(this.handleError));
   }
-  sendMessage(message:FormData){
+  public sendMessage(message:FormData){
     let api = `${this.endpoint}/Message/create`;
     return this.http.post(api, message).pipe(catchError(this.handleError));
   }
-  updateMessage(message:FormData){
+  public updateMessage(message:FormData){
     let api = `${this.endpoint}/Message/update`;
     return this.http.put(api, message).pipe(catchError(this.handleError));
   }
-  deleteMessage(name:string, messageId:string){
+  public deleteMessage(name:string, messageId:string){
     this.headers.append('Content-Type', 'application/json')
     let api = `${this.endpoint}/Message/delete?chatName=${name}&messageId=${messageId}`;
     return this.http.delete(api,{ headers: this.headers}).pipe(catchError(this.handleError));
   }
-  downloadFile(contentId:string){
+  public downloadFile(contentId:string){
       this.headers.append('Content-Type', 'application/json')
       let api = `${this.endpoint}/content/${contentId}`;
       return this.http.get(api,{ responseType: 'blob' }).pipe(catchError(this.handleError));
   }
-  forwardMessage(messageId:string, chatName:string){
+  public forwardMessage(messageId:string, chatName:string){
     let api = `${this.endpoint}/Message/forward?messageId=${messageId}&chatName=${chatName}`;
     return this.http.post(api, {}).pipe(catchError(this.handleError));
   }
