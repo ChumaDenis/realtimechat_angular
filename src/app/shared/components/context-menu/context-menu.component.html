@@ -1,0 +1,8 @@
+<div class="menu-link">
+  <button
+    class="btn"
+    *ngFor="let menuItem of contextMenuItems; index as i"
+    (click)="onContextMenuClick($event, menuItem)">
+    {{ menuItem.menuText }}
+  </button>
+</div>

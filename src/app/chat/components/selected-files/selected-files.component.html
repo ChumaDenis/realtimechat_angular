@@ -1,0 +1,5 @@
+<div class="selected-file-component">
+    <mat-icon class="file-icon">note</mat-icon>
+    <p>{{this.file}}</p>
+    <button class="btn" (click)="this.DeleteFileEvent.emit(this.file)"><mat-icon>delete</mat-icon></button>
+</div>

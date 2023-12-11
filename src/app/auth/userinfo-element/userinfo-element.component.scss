@@ -1,0 +1,30 @@
+.user-avatar{
+  height: 50px;
+  width: 50px;
+  border-radius: 2vw;
+}
+.userinfo-component{
+  position: relative;
+  display: flex;
+  border: solid #9c9c9c 3px;
+  border-radius: 20px;
+  margin: 0 10px 0 10px;
+  top: 7px;
+  padding: 5px 10px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
+  margin-bottom: 10px;
+}
+.user-header{
+  font-size: 20px;
+}
+.userinfo-content{
+  padding: 0 10px;
+  *{
+    margin: 0;
+    padding: 0;
+  }
+  p{
+    font-size: 15px;
+  }
+
+}

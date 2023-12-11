@@ -1,0 +1,24 @@
+<header class="chatinfo-header">
+    <div class="chatinfo-container" (click)="OpenChatInfo()">
+        <h5>
+            {{this.ChatInfo?.name}}
+        </h5>
+        <p>
+            {{this.ChatInfo?.userViewModels?.length}} members
+        </p>
+    </div>
+    <div>
+        <app-context-menu
+                *ngIf="clickMenuItems.length > 0 && isDisplayContextMenu"
+                style="position: fixed; right: 70px; z-index: 999;"
+                [contextMenuItems]="clickMenuItems"
+                (onContextMenuItemClick)="handleMenuItemClick($event)"
+        ></app-context-menu>
+        <button class="btn" (click)="this.isDisplayContextMenu=!this.isDisplayContextMenu">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+    </div>
+
+
+</header>
+<app-chatinfo *ngIf="ChatInfoIsOpen" [chatInfo]="ChatInfo" (CloseChatInfo)="this.ChatInfoIsOpen=false"></app-chatinfo>

@@ -1,0 +1,37 @@
+<div class="message-component" [style]="GetMessageStyles()" (contextmenu)="displayContextMenu($event); false" >
+    <div class="message" (pointerover)="this.isActive=true;" (pointerleave)="this.isActive=false;">
+        <div class="message-container" >
+            <h6>{{this.message.isForwarded?"Forwarded form "+this.message.owner?.userName:this.message.owner?.userName}}</h6>
+            <div *ngIf="this.isActive">
+                <button  class="btn button-div" (click)="ReplyMessage()" >reply</button>
+            </div>
+            <div *ngIf="this.isActive">
+                <button  class="btn button-div" (click)="ForwardMessage()" >forward</button>
+            </div>
+        </div>
+        <div *ngIf="this.message.messageReply" class="message-reply">
+          <h6>this.message.messageReply.owner?.userName}}</h6>
+          <p class="text single-line">{{this.message.messageReply.textContent}}</p>
+        </div>
+        <div *ngIf="this.currentContent">
+            <app-content-view [content]="FilterContent()" [currentContent]="this.currentContent" (CloseViewEvent)="this.currentContent=undefined;">
+
+            </app-content-view>
+        </div>
+        <div *ngIf="this.hasFiles">
+            <app-content-element *ngFor="let content of this.message?.contentFiles" (ContentOpenEvent)="this.currentContent=content" [content]="content"></app-content-element>
+        </div>
+        <div class="message-container">
+            <span>{{this.message.textContent}} </span>
+        </div>
+        <p class="message-date">{{this.message.sendTime | date:'HH:mm dd/MM/yy'}}</p>
+    </div>
+
+    <app-context-menu
+      *ngIf="rightClickMenuItems.length > 0 && isDisplayContextMenu"
+      [ngStyle]="getRightClickMenuStyle()"
+      [contextMenuItems]="rightClickMenuItems"
+      (onContextMenuItemClick)="handleMenuItemClick($event)"
+    ></app-context-menu>
+</div>
+<app-select-chats (CloseForward)="forwardMessage=false" [message]="message" *ngIf="forwardMessage"></app-select-chats>

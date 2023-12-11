@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { AuthService } from './../shared/auth.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'any',
 })
 export class AuthGuard {
   constructor(public authService: AuthService, public router: Router) {}
@@ -23,7 +23,6 @@ export class AuthGuard {
       | boolean
       | UrlTree {
     if (this.authService.isLoggedIn !== true) {
-      window.alert('Access not allowed!');
       this.router.navigate(['log-in']);
     }
     return true;

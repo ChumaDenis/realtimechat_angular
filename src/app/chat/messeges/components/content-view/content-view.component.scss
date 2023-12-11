@@ -1,0 +1,41 @@
+.content-view{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(219, 219, 219,0.5);
+  z-index: 999;
+}
+.img-view{
+  max-width: 800px;
+  max-height: 800px;
+  text-align: center;
+  position: absolute;
+  margin: auto;
+  top:30%;
+  left: 30%;
+}
+
+.view-button{
+  height: 100vh;
+  width: 7vw;
+  cursor: pointer;
+}
+.view-button-div-next{
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+
+}
+.view-close-button{
+  height: 7vw;
+}
+.view-next-button{
+  height: 100%;
+}
+
+
+
