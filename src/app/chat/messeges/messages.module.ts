@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {MessageComponent} from "./message.component";
 import {VideoComponent} from "./components/video/video.component";
-import {SelectedFilesComponent} from "./components/selected-files/selected-files.component";
+import {SelectedFilesComponent} from "../components/selected-files/selected-files.component";
 import {ContentViewComponent} from "./components/content-view/content-view.component";
 import {ContentElementComponent} from "./components/content-element/content-element.component";
 import {MatIconModule} from "@angular/material/icon";
@@ -21,7 +21,6 @@ import {SelectChatsComponent} from "../components/select-chats/select-chats.comp
   declarations: [
     MessageComponent,
     VideoComponent,
-    SelectedFilesComponent,
     ContentViewComponent,
     ContentElementComponent,
      SelectChatsComponent
@@ -39,8 +38,7 @@ import {SelectChatsComponent} from "../components/select-chats/select-chats.comp
     SharedModule
   ],
   exports:[
-    MessageComponent,
-    SelectedFilesComponent
+    MessageComponent
   ]
 })
 export class MessagesModule { }

@@ -4,7 +4,7 @@ import {ChatInfoComponent} from "./components/chatinfo/chat-info.component";
 import {SelectChatsComponent} from "./components/select-chats/select-chats.component";
 import {MessageComponent} from "./messeges/message.component";
 import {VideoComponent} from "./messeges/components/video/video.component";
-import {SelectedFilesComponent} from "./messeges/components/selected-files/selected-files.component";
+import {SelectedFilesComponent} from "./components/selected-files/selected-files.component";
 import {ContentViewComponent} from "./messeges/components/content-view/content-view.component";
 import {ContentElementComponent} from "./messeges/components/content-element/content-element.component";
 import {SharedModule} from "../shared/shared.module";
@@ -25,7 +25,8 @@ import {ChatRoutingModule} from "./chat-routing.module";
   declarations: [
     ChatComponent,
     ChatInfoComponent,
-    ChatinfoElementComponent
+    ChatinfoElementComponent,
+    SelectedFilesComponent,
   ],
   exports: [
   ],

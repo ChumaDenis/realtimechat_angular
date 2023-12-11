@@ -107,7 +107,7 @@ export class AuthService {
         catchError(this.handleError)
     );
   }
-  protected getUserByName(userName:string){
+  getUserByName(userName:string){
     let api = `${this.endpoint}/Auth/info?name=${userName}`;
     return this.http.get(api, { headers: this.headers }).pipe(catchError(this.handleError));
   }
