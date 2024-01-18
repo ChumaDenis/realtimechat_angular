@@ -1,0 +1,31 @@
+<div class="body">
+  <div class="chart">
+    <h3 style="text-align: center">Statistics of the time of sending messages</h3>
+    <app-chart [chartDatasets]="InitChartDataset(Charts)" ></app-chart>
+  </div>
+  <div class="filter-div">
+    <h5>Filter by date:</h5>
+    <input style="margin-top: 8px" [(ngModel)]="dateFilter" (change)="OnChangeFilter()"  type="date">
+  </div>
+  <input placeholder="Find chat..." #inputRef class="form-control input" type="text" (input)="FindChat(inputRef.value)">
+  <div *ngFor="let i of VisibleChats" class="chats">
+    <div  class="" style="display: flex">
+      <input class="checkbox" type="checkbox" (change)="onCheckboxChange($event, i.name??'')" />
+      <div style="margin-left: 50px">
+        <div style="position: relative; display: flex">
+          <h4>{{i.name}}</h4>
+          <p style="margin-left: 40px">{{"Chat Owner: "+i.chatOwner?.userName}}</p>
+        </div>
+        <div style="position: relative; display: flex">
+          <p>{{"Type: "+(i.isChat?"chat":"channel")}}</p>
+          <p style="margin-left: 40px">{{"Privacy: "+(i.privacy?"private":"public")}}</p>
+        </div>
+        <div style="position: relative; display: flex">
+          <p>{{"Total Messages: "+i.totalMessages}}</p>
+          <p style="margin-left: 40px">{{"Total Users: "+i.totalUsers}}</p>
+        </div>
+      </div>
+      </div>
+
+  </div>
+</div>
