@@ -3,6 +3,7 @@ import {Content} from "../../DTOs/Content";
 import {MessageService} from "../../../services/message.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {first} from "rxjs";
+import * as fileSaver from 'file-saver';
 
 @Component({
   selector: 'app-content-view',
@@ -34,6 +35,11 @@ export class ContentViewComponent implements OnInit{
         this.hasNext=this.currentIndex<this.content?.length-1;
     }
   }
+  protected download(){
+    // @ts-ignore
+    const link= document.createElement("a");
+    fileSaver.saveAs(this.etepov, this.currentContent?.fileName);
+  }
   protected GoToPrevious(){
     this.currentIndex-=1;
     this.currentContent=this.content?.at(this.currentIndex);
@@ -46,6 +52,7 @@ export class ContentViewComponent implements OnInit{
     this.SetIndex();
     this.LoadFile();
   }
+  private etepov:string="";
   private LoadFile(){
     console.log(this.blobs);
     if(this.blobs[this.currentIndex]){
@@ -56,6 +63,7 @@ export class ContentViewComponent implements OnInit{
       this.service.downloadFile(this.currentContent?.id||"").pipe(first()).subscribe(file=>{
         this.blobs[this.currentIndex]=file;
         let objectURL = URL.createObjectURL(file);
+        this.etepov=objectURL;
         this.fileUrl= this.sanitaizer.bypassSecurityTrustUrl(objectURL);
       })
     }

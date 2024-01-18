@@ -8,4 +8,5 @@ export class User {
     status?:number;
     createDate?: Date;
     avatar?:Avatar;
+    userRole?:string[];
 }

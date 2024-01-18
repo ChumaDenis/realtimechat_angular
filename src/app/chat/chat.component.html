@@ -53,7 +53,7 @@
                 <input type='file' multiple id="getFile" (change)="detectFiles($event)" style="display:none">
             </div>
             <div>
-                <input style="margin-top: 8px" formControlName="SendTime" type="datetime-local">
+                <input style="margin-top: 8px" formControlName="SendTime" type="datetime-local" >
             </div>
 
             <button class="btn send-button" type="submit" (click)="sendMessage()"><mat-icon>send</mat-icon></button>

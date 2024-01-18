@@ -1,5 +1,5 @@
 <div class="chats">
-    <input class="chat-input" placeholder="Find chat...">
+    <input class="chat-input" placeholder="Find chat..." #inputRef (input)="FindChat(inputRef.value)">
     <div class="chats-body">
         <div class="chat-buttons">
             <button  (click)="selectAllChats()">all</button>

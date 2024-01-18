@@ -9,4 +9,5 @@ import {Content} from "../../DTOs/Content";
 export class ContentElementComponent {
   @Input() content?:Content;
   @Output() ContentOpenEvent = new EventEmitter<Content>();
+
 }

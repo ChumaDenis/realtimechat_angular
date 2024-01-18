@@ -109,7 +109,9 @@ export class ChatMenuComponent implements OnInit, OnDestroy{
             });
         })
     }
-
+    protected FindChat(InputText:string){
+      this.selectedChats=this.chats?.filter(x=>x.name?.includes(InputText));
+    }
     private getChats(){
         this.service.getChats().pipe(first()).subscribe(data=>{
             this.chats= this.FormatLastMessage(data as ChatElement[]);

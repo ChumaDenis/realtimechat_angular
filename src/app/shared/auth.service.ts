@@ -102,6 +102,7 @@ export class AuthService {
     let api = `${this.endpoint}/Auth/myInfo`;
     return this.http.get(api, { headers: this.headers }).pipe(
         map((res) => {
+          console.log(res);
           return res || {};
         }),
         catchError(this.handleError)

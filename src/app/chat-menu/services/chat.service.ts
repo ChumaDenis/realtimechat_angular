@@ -19,7 +19,21 @@ export class ChatService {
   constructor(private http: HttpClient, public router: Router) {
 
   }
+  getAllChats(): Observable<any> {
+    let api = `${this.endpoint}/Chat/allChats`;
+    return this.http.get(api,{ headers: this.headers}).pipe(catchError(this.handleError));
+  }
 
+  getGeneralChatStats(date?:Date):Observable<any>{
+    let api = `${this.endpoint}/Chat/chatStats`;
+    if(date) api+=`?date=${date.toString()}`;
+    return this.http.get(api,{ headers: this.headers}).pipe(catchError(this.handleError));
+  }
+  getChatStats(chatName:string, date?:Date):Observable<any>{
+    let api = `${this.endpoint}/Chat/chatStats/${chatName}`;
+    if(date) api+=`?date=${date.toString()}`;
+    return this.http.get(api,{ headers: this.headers}).pipe(catchError(this.handleError));
+  }
   getChats(): Observable<any> {
     let api = `${this.endpoint}/Chat/chats`;
     return this.http.get(api,{ headers: this.headers}).pipe(catchError(this.handleError));
