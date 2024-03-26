@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { User } from '../components/Models/user';
-import { Observable, throwError } from 'rxjs';
+import { User } from './Dtos/Auth/User';
+import {first, Observable, throwError} from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import {
   HttpClient,
@@ -8,9 +8,12 @@ import {
   HttpErrorResponse,
 } from '@angular/common/http';
 import { Router } from '@angular/router';
+import {FacebookResponce} from "./Dtos/Auth/FacebookResponce";
+import {SocialUser} from "angularx-social-login";
+import {SocialAuthService} from "@abacritt/angularx-social-login";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'any',
 })
 
 export class AuthService {
@@ -18,31 +21,66 @@ export class AuthService {
   headers = new HttpHeaders().append('Content-Type', 'application/json');
   currentUser?:User;
 
-  constructor(private http: HttpClient, public router: Router) {}
+  constructor(private http: HttpClient, public router: Router,private authService: SocialAuthService) {}
 
   // Sign-up
-  signUp(user: User): Observable<any> {
+  public signUp(user: User): Observable<any> {
     let api = `${this.endpoint}/Auth/register`;
     return this.http.post(api, user).pipe(catchError(this.handleError));
   }
 
-  // Sign-in
-  signIn(user: User) {
+  public signIn(user: User) {
     return this.http
         .post<any>(`${this.endpoint}/Auth/login`, user)
+        .pipe(first())
         .subscribe((res: any) => {
           localStorage.setItem('access_token', res.token);
           this.getUserProfile().subscribe((res) => {
             this.currentUser = res;
-
             localStorage.setItem('userName', this.currentUser?.userName||"");
-            console.log(localStorage.getItem('userName'));
-            this.router.navigate(['user-profile/']);
+            this.router.navigate(['']);
           });
         });
   }
+  public signInWithFacebook(facebookResponce:FacebookResponce) {
+    console.log(facebookResponce.accessToken);
+    return this.http
+      .post<any>(`${this.endpoint}/Auth/login-facebook?access=${facebookResponce.accessToken}`, {})
+      .pipe(first())
+      .subscribe((res: any) => {
+        localStorage.setItem('access_token', res.token);
+        this.getUserProfile().subscribe((res) => {
+          this.currentUser = res;
+          localStorage.setItem('userName', this.currentUser?.userName||"");
+          this.router.navigate(['']);
+        });
+      });
+  }
 
-  getToken() {
+  public signInWithGoogle(responce:SocialUser) {
+    console.log(responce);
+    return this.http
+        .post<any>(`${this.endpoint}/Auth/login-google?access=${responce.idToken}`, {})
+        .pipe(first())
+        .subscribe((res: any) => {
+          localStorage.setItem('access_token', res.token);
+          this.getUserProfile().subscribe((res) => {
+            this.currentUser = res;
+            localStorage.setItem('userName', this.currentUser?.userName||"");
+            this.router.navigate(['']);
+          });
+        });
+  }
+  public editUser(user:User){
+    return this.http
+        .put<any>(`${this.endpoint}/Auth/edit`, user)
+        .pipe(first())
+        .subscribe((res: any) => {
+          this.signIn(user);
+        });
+  }
+
+  public getToken() {
     return localStorage.getItem('access_token');
   }
 
@@ -51,20 +89,18 @@ export class AuthService {
     return authToken !== null ? true : false;
   }
 
-  doLogout() {
-    let removeToken = localStorage.removeItem('access_token');
-    if (removeToken == null) {
-      this.router.navigate(['login']);
-      localStorage.removeItem('userName');
-    }
+  public doLogout() {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('userName');
+    localStorage.removeItem("userAvatar");
+    this.authService.signOut();
+    this.router.navigate(['log-in']);
   }
 
   // User.ts profile
-  getUserProfile(): Observable<any> {
+  public getUserProfile(): Observable<any> {
     let api = `${this.endpoint}/Auth/myInfo`;
-    //this.headers.append('Authorization', 'Bearer '+localStorage.getItem('access_token'))
     return this.http.get(api, { headers: this.headers }).pipe(
-
         map((res) => {
           console.log(res);
           return res || {};
@@ -72,9 +108,12 @@ export class AuthService {
         catchError(this.handleError)
     );
   }
-
+  getUserByName(userName:string){
+    let api = `${this.endpoint}/Auth/info?name=${userName}`;
+    return this.http.get(api, { headers: this.headers }).pipe(catchError(this.handleError));
+  }
   // Error
-  handleError(error: HttpErrorResponse) {
+  private handleError(error: HttpErrorResponse) {
     let msg = '';
     if (error.error instanceof ErrorEvent) {
       // client-side error

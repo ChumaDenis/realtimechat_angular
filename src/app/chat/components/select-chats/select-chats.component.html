@@ -1,0 +1,21 @@
+<div class="chatinfo-page">
+    <div class="chatinfo-container">
+        <div class="chatinfo-header">
+            <h3>Forward message to:</h3>
+            <div style="display: flex;position: relative;">
+                <button class="btn" (click)="CloseForward.emit()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+        </div>
+        <div>
+            <div *ngFor="let i of this.chats" (click)="selectChat(i)" style="background-color: #9c9c9c">
+                <h5>{{i.name}}</h5>
+            </div>
+        </div>
+        <button [disabled]="!isSelected" class="btn" (click)="this.forwardMessage()">
+            <mat-icon>send</mat-icon>
+            Send
+        </button>
+    </div>
+</div>

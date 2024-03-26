@@ -1,0 +1,29 @@
+.chatinfo-page{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(219, 219, 219,0.5);
+  z-index: 999;
+}
+.chatinfo-container{
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
+  background-color: #dbdbdb;
+  border-radius: 20px;
+  border: solid #9c9c9c 3px;
+  width: 30vw;
+  height: 50vh;
+  margin: auto;
+  position: relative;
+  padding: 30px;
+  margin-top: 10%;
+}
+.chatinfo-header{
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+

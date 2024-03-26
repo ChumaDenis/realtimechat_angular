@@ -1,0 +1,57 @@
+<div class="user-profile-container">
+    <div class="container">
+        <div>
+            <div class="user-profile-header">
+                <h3 >User Profile</h3>
+                <div>
+                    <button *ngIf="isOwner" class="btn" (click)="this.isDisplayContextMenu = !this.isDisplayContextMenu;">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <app-context-menu
+                            *ngIf="clickMenuItems.length > 0 && isDisplayContextMenu"
+                            style="position: fixed"
+                            [contextMenuItems]="clickMenuItems"
+                            (onContextMenuItemClick)="handleMenuItemClick($event)"
+                    ></app-context-menu>
+                    <button class="btn" (click)="this.CloseUserProfileEvent.emit('')">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <div class="inner-main" *ngIf="!isEditMode">
+                <div class="user-avatar-container">
+                    <img class="user-avatar" [src]="this.avatar">
+                    <div>
+                        <button *ngIf="isOwner" class="btn input-file"  onclick="document.getElementById('getFile').click()">
+                            <mat-icon>attach_file</mat-icon>
+                        </button>
+                        <input type='file' multiple id="getFile" (change)="detectFiles($event)" style="display:none">
+                    </div>
+                </div>
+                <p><strong>Name:</strong> {{ this.User?.userName }}</p>
+                <p><strong>Status:</strong> {{ this.User?.status }}</p>
+                <p><strong>Email:</strong> {{ this.User?.email}}</p>
+                <p><strong>Phone:</strong> {{ this.User?.phoneNumber}}</p>
+            </div>
+
+            <div *ngIf="isEditMode&& this.userEdit">
+                <input type="text" [(ngModel)]="this.userEdit.userName">
+                <input type="text" [(ngModel)]="this.userEdit.status">
+                <input type="text" [(ngModel)]="this.userEdit.email">
+                <input type="text" [(ngModel)]="this.userEdit.phoneNumber">
+            </div>
+        </div>
+        <div *ngIf="isOwner">
+            <button class="btn user-btn user-logout-btn" (click)="this.Logout()" *ngIf="!isEditMode">
+                <mat-icon>exit_to_app</mat-icon>
+                <p>Log out</p>
+            </button>
+            <button class="btn user-btn" (click)="this.Edit()" *ngIf="isEditMode">
+                <mat-icon>edit</mat-icon>
+                <p>Edit</p>
+            </button>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,17 @@
+<div class="content-view"  >
+    <button class="btn view-button" *ngIf="this.hasPrevious" (click)="GoToPrevious()">
+        <mat-icon>navigate_before</mat-icon>
+    </button>
+    <img alt="" class="img-view" *ngIf="this.currentContent?.eContentType==1&&fileUrl" [src]="fileUrl">
+    <app-video *ngIf="this.currentContent?.eContentType==2&&fileUrl" [VideoUrl]="fileUrl"></app-video>
+
+    <div class="view-button view-button-div-next">
+        <button class="btn view-close-button" (click)="this.CloseViewEvent.emit('');">
+            <mat-icon>clear</mat-icon>
+        </button>
+        <button class="btn view-next-button" *ngIf="this.hasNext" (click)="GoToNext()" >
+            <mat-icon>navigate_next</mat-icon>
+        </button>
+      <button class="btn view-close-button" (click)="download()"><mat-icon> vertical_align_bottom</mat-icon></button>
+    </div>
+</div>

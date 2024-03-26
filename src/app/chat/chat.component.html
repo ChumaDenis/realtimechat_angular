@@ -1,0 +1,67 @@
+<div class="chat-container">
+    <app-chatinfo-element [ChatInfo]="this.ChatInfo"></app-chatinfo-element>
+    <div class="div-with-scroll" #scroll (scroll)="onScroll()">
+        <app-message *ngFor="let m of this.Messages;" [message]="m" (MessageReplyEvent)="onMessageReply($event)" (MessageChangeEvent)="onMessageChange($event)">
+            {{this.IsScrolled ? scrollToBottom() : ''}}
+        </app-message>
+    </div>
+    <div class="input-container">
+        <div class="message-reply-container" *ngIf="isUpdateMessage">
+            <div class="message-reply">
+                <mat-icon>create</mat-icon>
+                <div>
+                    <h6>Edite Message</h6>
+                    <p class="text single-line">
+                        <strong>{{this.UpdateMessage?.owner?.userName}}:</strong>
+                        {{this.UpdateMessage?.textContent}}
+                    </p>
+                </div>
+            </div>
+
+            <div>
+                <button class="btn" (click)="clearForm()">
+                    <mat-icon>clear</mat-icon>
+                </button>
+            </div>
+        </div>
+        <div class="message-reply-container" *ngIf="isReplyMessage">
+            <div class="message-reply">
+                <mat-icon>reply</mat-icon>
+                <div>
+                    <h6>Reply Message</h6>
+                    <p class="text single-line">
+                        <strong>{{this.replyMessage?.owner?.userName}}:</strong>
+                        {{this.replyMessage?.textContent}}
+                    </p>
+                </div>
+            </div>
+            <div>
+                <button class="btn" (click)="CloseReply()">
+                    <mat-icon>clear</mat-icon>
+                </button>
+            </div>
+        </div>
+        <div class="input-file-container">
+            <app-selected-files *ngFor="let file of this.fileList" [file]="file.name" (DeleteFileEvent)="DeleteFile($event)"></app-selected-files>
+        </div>
+        <form class="message-form" [formGroup]="sendMessageForm" *ngIf="ChatInfo&& (ChatInfo.isChat||ChatInfo.isOwner)">
+            <input class="chat-input" multiple (keyup.enter)="sendMessage()" id="textContent" type="text" formControlName="TextContent">
+            <div>
+                <button class="btn input-file"  onclick="document.getElementById('getFile').click()">
+                    <mat-icon>attach_file</mat-icon>
+                </button>
+                <input type='file' multiple id="getFile" (change)="detectFiles($event)" style="display:none">
+            </div>
+            <div>
+                <input style="margin-top: 8px" formControlName="SendTime" type="datetime-local" >
+            </div>
+
+            <button class="btn send-button" type="submit" (click)="sendMessage()"><mat-icon>send</mat-icon></button>
+        </form>
+        <div class="join-chat">
+            <button class="btn join-chat-button" *ngIf="ChatInfo&&!ChatInfo.isSubscribe" (click)="JoinChat()">Join Channel</button>
+        </div>
+
+    </div>
+
+</div>

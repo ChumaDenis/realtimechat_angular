@@ -1,0 +1,6 @@
+<button class="btn content-component" (click)="this.ContentOpenEvent.emit(this.content);">
+    <mat-icon *ngIf="this.content?.eContentType==1" class="content-icon">image</mat-icon>
+    <mat-icon *ngIf="this.content?.eContentType==2" class="content-icon">movie</mat-icon>
+    <mat-icon *ngIf="this.content?.eContentType==3" class="content-icon">note</mat-icon>
+    <p>{{this.content?.fileName}}</p>
+</button>

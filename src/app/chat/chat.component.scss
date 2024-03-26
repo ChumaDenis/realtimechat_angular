@@ -1,0 +1,101 @@
+.chat-container{
+  height: 99.5%;
+  position: relative;
+  box-sizing: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  .chat-input{
+    margin-top: 3px;
+    height: 40px;
+    width: 75%;
+    border-radius: 20px;
+    padding: 0 20px;
+    max-height: 10vh;
+  }
+}
+.div-with-scroll{
+  height: 100%;
+  overflow:scroll;
+  overflow-x:hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column-reverse;
+}
+.input-file{
+  position: relative;
+  width:40px;
+  height:40px;
+  font-size: 25px;
+  >*{
+    text-align: center;
+  }
+}
+.send-button{
+  text-align: center;
+  width:40px;
+  height:40px;
+  font-size: 25px;
+}
+
+
+.message-reply-container{
+  border-top: solid #dbdbdb 3px;
+  border-radius: 10px;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+
+  .message-reply{
+    position: relative;
+    display: flex;
+    >*{
+      margin: 0 10px;
+    }
+  }
+  mat-icon{
+    margin: auto;
+    text-align: center;
+    width: auto;
+    height: auto;
+    font-size: 30px;
+  }
+  p{
+    font-size: 15px;
+  }
+}
+.message-form{
+  display: flex;
+  justify-content: center;
+}
+.input-file-container{
+  display: flex;
+  padding: 0 1.5vw;
+  >*{
+    margin: 0 1vw;
+  }
+}
+.input-container{
+  position: relative;
+  margin: unset;
+}
+
+.text.single-line {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 60vw;
+}
+.join-chat{
+  position: relative;
+  width: 100%;
+  padding: 0 50px;
+  margin: 10px 0;
+}
+.join-chat-button{
+  border: solid black 2px;
+  width: 100%;
+  border-radius: 20px;
+
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
+}

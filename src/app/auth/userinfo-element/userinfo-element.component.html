@@ -1,0 +1,14 @@
+<div (click)="this.isOpenUserProfile=true" style="cursor: pointer" class="userinfo-component" >
+    <img class="user-avatar" [src]="this.avatar" alt="" >
+    <div class="userinfo-content">
+        <h6 class="user-header">
+            {{this.userProfile?.userName}}
+        </h6>
+        <p>
+            {{this.statusName}}
+        </p>
+    </div>
+
+</div>
+
+<app-user-profile *ngIf="isOpenUserProfile"  [User]="userProfile" (CloseUserProfileEvent)="this.isOpenUserProfile=false"></app-user-profile>
